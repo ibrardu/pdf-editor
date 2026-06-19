@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDF editor</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f5f4f0;
+    color: #1f1e1c;
+  }
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  #toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e0d8;
+  }
+  #toolbar button {
+    border: 1px solid #e2e0d8;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  #toolbar button:hover {
+    background: #f5f4f0;
+  }
+  #main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+  #sidebar {
+    width: 160px;
+    border-right: 1px solid #e2e0d8;
+    background: #ffffff;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  #canvas-area {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  #upload-placeholder {
+    color: #6b6962;
+    font-size: 14px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div id="toolbar">
+    <button data-tool="select">Select</button>
+    <button data-tool="text">Text</button>
+    <button data-tool="draw">Draw</button>
+    <button data-tool="highlight">Highlight</button>
+    <button data-tool="shape">Shape</button>
+    <input type="file" id="file-input" accept="application/pdf" style="margin-left:auto;" />
+  </div>
+  <div id="main">
+    <div id="sidebar">
+      <!-- page thumbnails populate here -->
+    </div>
+    <div id="canvas-area">
+      <div id="upload-placeholder">Upload a PDF to get started</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script type="module">
+  import editorStore from './editorStore.js';
+
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  document.getElementById('file-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    await editorStore.loadPdf(bytes, file.name);
+  });
+
+  document.querySelectorAll('#toolbar button[data-tool]').forEach((btn) => {
+    btn.addEventListener('click', () => editorStore.setActiveTool(btn.dataset.tool));
+  });
+
+  editorStore.subscribe((state) => {
+    document.querySelectorAll('#toolbar button[data-tool]').forEach((btn) => {
+      btn.style.background = btn.dataset.tool === state.activeTool ? '#f5f4f0' : '#ffffff';
+    });
+    if (state.fileName) {
+      document.getElementById('upload-placeholder').textContent =
+        `Loaded: ${state.fileName} (${state.totalPages} pages)`;
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+{
+  "waves": [
+    {
+      "version": "v0.1",
+      "name": "Core viewer and shell",
+      "features": [
+        {
+          "id": 1,
+          "name": "pdf-upload-and-render",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 2,
+          "name": "app-shell-and-toolbar",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 3,
+          "name": "editor-store",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "v0.2",
+      "name": "Organize PDF",
+      "features": [
+        {
+          "id": 4,
+          "name": "page-reorder",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 5,
+          "name": "page-delete",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 6,
+          "name": "page-rotate",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 7,
+          "name": "page-extract",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 8,
+          "name": "merge-pdf",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 9,
+          "name": "split-pdf",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "v0.3",
+      "name": "Edit PDF",
+      "features": [
+        {
+          "id": 10,
+          "name": "add-text",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 11,
+          "name": "add-shapes",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 12,
+          "name": "freehand-draw",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 13,
+          "name": "highlight-text",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 14,
+          "name": "add-image",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 15,
+          "name": "whiteout-tool",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "v0.4",
+      "name": "Convert PDF",
+      "features": [
+        {
+          "id": 16,
+          "name": "pdf-to-image",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 17,
+          "name": "image-to-pdf",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 18,
+          "name": "pdf-to-text",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "v0.5",
+      "name": "Sign and secure",
+      "features": [
+        {
+          "id": 19,
+          "name": "e-signature",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 20,
+          "name": "password-protect",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 21,
+          "name": "watermark",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "v0.6",
+      "name": "Export and polish",
+      "features": [
+        {
+          "id": 22,
+          "name": "export-flatten",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 23,
+          "name": "download-and-filename",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 24,
+          "name": "undo-redo",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 25,
+          "name": "mobile-responsive",
+          "status": "todo",
+          "pr": null,
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        }
+      ]
+    }
+  ]
+}
