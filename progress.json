@@ -90,8 +90,8 @@
         {
           "id": 8,
           "name": "merge-pdf",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/8",
           "agents": [
             "frontend",
             "backend",
