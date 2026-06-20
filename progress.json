@@ -79,8 +79,8 @@
         {
           "id": 7,
           "name": "page-extract",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/7",
           "agents": [
             "frontend",
             "backend",
