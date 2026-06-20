@@ -35,6 +35,8 @@ v0.1 — Core viewer and shell complete.
   PDF containing only that specific page, with rotations applied.
 - **Merge PDF** — "Merge PDF" button in the toolbar (only visible when a doc
   is loaded) to pick another PDF and append its pages to the current document.
+- **Split PDF** — "Split PDF" button in the toolbar splits the document at the
+  currently viewed page into two separate PDF downloads.
 
 ## Tech stack
 
