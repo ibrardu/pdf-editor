@@ -22,6 +22,8 @@ const editOverlay = {
     });
 
     overlayCanvas.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    window.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    window.addEventListener('mouseup', this.handleMouseUp.bind(this));
   },
 
   setViewport(viewport) {
@@ -36,11 +38,21 @@ const editOverlay = {
     
     const pageEdits = edits.filter(e => e.page === currentPage);
     editRenderer.drawEdits(overlayCtx, pageEdits, currentViewport);
+
+    // Draw active drawing
+    if (this.isDrawingShape && this.activeShape) {
+      editRenderer.drawShape(overlayCtx, this.activeShape, currentViewport);
+    }
   },
+
+  isDrawingShape: false,
+  activeShape: null,
 
   handleMouseDown(e) {
     const { activeTool, currentPage } = editorStore.state;
     if (activeTool === 'select') return;
+
+    if (e.target !== overlayCanvas) return;
 
     const rect = overlayCanvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -51,6 +63,68 @@ const editOverlay = {
 
     if (activeTool === 'text') {
       this.startTextEntry(x, y, pdfX, pdfY, currentPage);
+    } else if (activeTool === 'shape') {
+      this.isDrawingShape = true;
+      this.activeShape = {
+        type: 'shape',
+        page: currentPage,
+        startX: pdfX,
+        startY: pdfY,
+        x: pdfX,
+        y: pdfY,
+        payload: {
+          width: 0,
+          height: 0,
+          color: 'transparent',
+          borderColor: '#4f46e5',
+          borderWidth: 2
+        }
+      };
+    }
+  },
+
+  handleMouseMove(e) {
+    if (this.isDrawingShape && this.activeShape && currentViewport) {
+      const rect = overlayCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const [pdfX, pdfY] = currentViewport.convertToPdfPoint(x, y);
+      
+      this.activeShape.payload.width = pdfX - this.activeShape.startX;
+      this.activeShape.payload.height = pdfY - this.activeShape.startY;
+      
+      // Keep x,y as top-left (or starting corner), width/height can be negative during drawing,
+      // but let's normalize them on mouseup or in renderer.
+      this.render();
+    }
+  },
+
+  handleMouseUp(e) {
+    if (this.isDrawingShape && this.activeShape) {
+      this.isDrawingShape = false;
+      // Normalize width/height and x/y
+      let { startX, startY } = this.activeShape;
+      let { width, height } = this.activeShape.payload;
+
+      if (width < 0) { startX += width; width = Math.abs(width); }
+      if (height < 0) { startY += height; height = Math.abs(height); }
+
+      if (width > 5 && height > 5) {
+        editorStore.addEdit({
+          type: 'shape',
+          page: this.activeShape.page,
+          x: startX,
+          y: startY,
+          payload: {
+            ...this.activeShape.payload,
+            width,
+            height
+          }
+        });
+      }
+      this.activeShape = null;
+      this.render();
     }
   },
 

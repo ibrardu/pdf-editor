@@ -37,19 +37,36 @@ const pdfEditBaker = {
         const { x, y, payload } = edit;
         const { text, fontSize, color } = payload;
         
-        // Convert hex color to rgb
-        const rgb = this.hexToRgb(color);
-        
-        // In pdf-lib, (0,0) is bottom-left, but we captured PDF coordinates via pdf.js which usually has (0,0) at top-left.
-        // Wait, pdf.js convertToPdfPoint returns (x, y) where (0,0) is bottom-left!
-        // Let's verify: pdf.js default coordinate system is indeed bottom-left just like PDF standard.
-        // So x, y are already bottom-left oriented.
+        const rgbColor = this.hexToRgb(color);
         
         pdfPage.drawText(text, {
           x: x,
-          y: y - fontSize, // Adjust for baseline: pdf-lib draws text with origin at bottom-left of the first line.
+          y: y - fontSize, // Adjust for baseline
           size: fontSize,
-          color: rgb
+          color: rgbColor
+        });
+      } else if (edit.type === 'shape') {
+        const { x, y, payload } = edit;
+        const { width, height, color, borderColor, borderWidth } = payload;
+
+        const rgbFill = color !== 'transparent' ? this.hexToRgb(color) : undefined;
+        const rgbBorder = this.hexToRgb(borderColor);
+
+        // pdf-lib's drawRectangle x,y is bottom-left corner of the rectangle
+        // The x,y we saved is top-left in PDF coordinates (from pdf.js). Wait, if we use top-left:
+        // Actually, pdf.js convertToPdfPoint returns (x, y) where (0,0) is bottom-left of the page.
+        // So x is left, y is top! Wait...
+        // If (0,0) is bottom-left, then y goes UP. So a rectangle starting at (x, y) and going DOWN by `height`
+        // means the bottom-left corner is at (x, y - height).
+        
+        pdfPage.drawRectangle({
+          x: x,
+          y: y - height,
+          width: width,
+          height: height,
+          color: rgbFill,
+          borderColor: rgbBorder,
+          borderWidth: borderWidth
         });
       }
     }
