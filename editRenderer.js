@@ -14,7 +14,7 @@ const editRenderer = {
     for (const edit of edits) {
       if (edit.type === 'text') {
         this.drawText(ctx, edit, viewport);
-      } else if (edit.type === 'shape') {
+      } else if (edit.type === 'shape' || edit.type === 'highlight') {
         this.drawShape(ctx, edit, viewport);
       } else if (edit.type === 'draw') {
         this.drawPath(ctx, edit, viewport);
@@ -56,7 +56,7 @@ const editRenderer = {
 
   drawShape(ctx, edit, viewport) {
     let { x, y, startX, startY, payload } = edit;
-    let { width, height, color, borderColor, borderWidth } = payload;
+    let { width, height, color, borderColor, borderWidth, opacity, blendMode } = payload;
 
     // Use startX, startY if available (during drawing), otherwise x, y
     let rectX = startX !== undefined ? startX : x;
@@ -82,6 +82,10 @@ const editRenderer = {
     const tY = Math.min(screenY, screenY2);
 
     ctx.save();
+    
+    if (opacity !== undefined) ctx.globalAlpha = opacity;
+    if (blendMode !== undefined) ctx.globalCompositeOperation = blendMode;
+
     ctx.fillStyle = color;
     ctx.strokeStyle = borderColor;
     ctx.lineWidth = borderWidth * viewport.scale;

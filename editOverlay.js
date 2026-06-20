@@ -41,7 +41,7 @@ const editOverlay = {
 
     // Draw active shape or path
     if (this.isDrawingShape && this.activeShape) {
-      if (this.activeShape.type === 'shape') {
+      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight') {
         editRenderer.drawShape(overlayCtx, this.activeShape, currentViewport);
       } else if (this.activeShape.type === 'draw') {
         editRenderer.drawPath(overlayCtx, this.activeShape, currentViewport);
@@ -72,10 +72,25 @@ const editOverlay = {
         return;
       }
       this.startTextEntry(x, y, pdfX, pdfY, currentPage);
-    } else if (activeTool === 'shape') {
+    } else if (activeTool === 'shape' || activeTool === 'highlight') {
       this.isDrawingShape = true;
+
+      let color = 'transparent';
+      let borderColor = '#4f46e5';
+      let borderWidth = 2;
+      let opacity = 1.0;
+      let blendMode = 'normal';
+
+      if (activeTool === 'highlight') {
+        color = '#ffff00';
+        borderColor = 'transparent';
+        borderWidth = 0;
+        opacity = 0.5;
+        blendMode = 'multiply';
+      }
+
       this.activeShape = {
-        type: 'shape',
+        type: activeTool,
         page: currentPage,
         startX: pdfX,
         startY: pdfY,
@@ -84,9 +99,11 @@ const editOverlay = {
         payload: {
           width: 0,
           height: 0,
-          color: 'transparent',
-          borderColor: '#4f46e5',
-          borderWidth: 2
+          color,
+          borderColor,
+          borderWidth,
+          opacity,
+          blendMode
         }
       };
     } else if (activeTool === 'draw') {
@@ -111,7 +128,7 @@ const editOverlay = {
       
       const [pdfX, pdfY] = currentViewport.convertToPdfPoint(x, y);
       
-      if (this.activeShape.type === 'shape') {
+      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight') {
         this.activeShape.payload.width = pdfX - this.activeShape.startX;
         this.activeShape.payload.height = pdfY - this.activeShape.startY;
       } else if (this.activeShape.type === 'draw') {
@@ -126,7 +143,7 @@ const editOverlay = {
     if (this.isDrawingShape && this.activeShape) {
       this.isDrawingShape = false;
       
-      if (this.activeShape.type === 'shape') {
+      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight') {
         // Normalize width/height and x/y
         let { startX, startY } = this.activeShape;
         let { width, height } = this.activeShape.payload;
@@ -136,7 +153,7 @@ const editOverlay = {
 
         if (width > 5 && height > 5) {
           editorStore.addEdit({
-            type: 'shape',
+            type: this.activeShape.type,
             page: this.activeShape.page,
             x: startX,
             y: startY,
