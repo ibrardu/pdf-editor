@@ -284,6 +284,20 @@ html, body {
 }
 .thumb-wrap.deleted .thumb-delete-btn:hover { background: var(--success); }
 
+.thumb-rotate-cw-btn {
+  bottom: 4px; right: 4px;
+  background: rgba(79,70,229,0.85);
+  color: #fff;
+}
+.thumb-rotate-cw-btn:hover { background: var(--accent); }
+
+.thumb-rotate-ccw-btn {
+  bottom: 4px; left: 4px;
+  background: rgba(79,70,229,0.85);
+  color: #fff;
+}
+.thumb-rotate-ccw-btn:hover { background: var(--accent); }
+
 /* Deleted page overlay */
 .thumb-wrap.deleted { opacity: 0.45; }
 .thumb-wrap.deleted canvas { filter: grayscale(1); }

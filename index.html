@@ -223,8 +223,10 @@
   let currentDocRef = null;
   let lastRenderedPage = -1;
   let lastRenderedZoom = -1;
+  let lastRenderedRotation = -1;
   let lastPageOrderStr = '';
   let lastDeletedSize = -1;
+  let lastRotationsStr = '';
   let rendering = false;
 
   editorStore.subscribe(async (state) => {
@@ -261,13 +263,16 @@
     prevPageBtn.disabled = state.currentPage <= 1;
     nextPageBtn.disabled = state.currentPage >= state.totalPages;
 
-    // Render page if page or zoom changed (map display pos → original page)
+    // Render page if page, zoom, or rotation changed
+    const currentRot = state.rotations[pageOps.displayToOriginalPage(state.currentPage) - 1] || 0;
     if (
       state.currentPage !== lastRenderedPage ||
-      state.zoom !== lastRenderedZoom
+      state.zoom !== lastRenderedZoom ||
+      currentRot !== lastRenderedRotation
     ) {
       lastRenderedPage = state.currentPage;
       lastRenderedZoom = state.zoom;
+      lastRenderedRotation = currentRot;
       if (!rendering) {
         rendering = true;
         try {
@@ -279,13 +284,15 @@
       }
     }
 
-    // Render thumbnails on new doc, page-order change, or deletion change
+    // Render thumbnails on new doc, page-order change, deletion change, or rotation change
     const orderStr = JSON.stringify(state.pageOrder);
     const delSize = state.deletedPages.size;
-    if (state.pdfJsDoc !== currentDocRef || orderStr !== lastPageOrderStr || delSize !== lastDeletedSize) {
+    const rotStr = JSON.stringify(state.rotations);
+    if (state.pdfJsDoc !== currentDocRef || orderStr !== lastPageOrderStr || delSize !== lastDeletedSize || rotStr !== lastRotationsStr) {
       if (state.pdfJsDoc !== currentDocRef) currentDocRef = state.pdfJsDoc;
       lastPageOrderStr = orderStr;
       lastDeletedSize = delSize;
+      lastRotationsStr = rotStr;
       await renderThumbnails(state);
     }
 
@@ -338,6 +345,30 @@
         pageOps.toggleDelete(originalIndex);
       });
       wrap.appendChild(delBtn);
+
+      // Rotate CW button
+      const rotCwBtn = document.createElement('button');
+      rotCwBtn.className = 'thumb-action-btn thumb-rotate-cw-btn';
+      rotCwBtn.setAttribute('aria-label', `Rotate page ${displayPos} clockwise`);
+      rotCwBtn.title = 'Rotate Clockwise';
+      rotCwBtn.innerHTML = '↻';
+      rotCwBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pageOps.rotateClockwise(originalIndex);
+      });
+      wrap.appendChild(rotCwBtn);
+
+      // Rotate CCW button
+      const rotCcwBtn = document.createElement('button');
+      rotCcwBtn.className = 'thumb-action-btn thumb-rotate-ccw-btn';
+      rotCcwBtn.setAttribute('aria-label', `Rotate page ${displayPos} counter-clockwise`);
+      rotCcwBtn.title = 'Rotate Counter-Clockwise';
+      rotCcwBtn.innerHTML = '↺';
+      rotCcwBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pageOps.rotateCounterClockwise(originalIndex);
+      });
+      wrap.appendChild(rotCcwBtn);
 
       // Click → navigate
       wrap.addEventListener('click', () => editorStore.setPage(displayPos));
