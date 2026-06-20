@@ -29,6 +29,8 @@ v0.1 — Core viewer and shell complete.
 - **Page delete** — Delete/restore button on each thumbnail (✕ / ↩). Deleted
   pages shown greyed-out with grayscale filter. Cannot delete the last
   remaining page.
+- **Page rotate** — Clockwise and counter-clockwise rotation buttons on each 
+  thumbnail (↻ / ↺). Updates both thumbnail and main canvas rendering.
 
 ## Tech stack
 

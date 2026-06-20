@@ -66,6 +66,24 @@ const pageOps = {
   isPageDeleted(originalIndex) {
     return editorStore.state.deletedPages.has(originalIndex);
   },
+
+  // ---- ROTATE (feat #6) ----
+
+  /**
+   * Rotate a page by 90 degrees clockwise.
+   * @param {number} originalIndex — 0-based
+   */
+  rotateClockwise(originalIndex) {
+    editorStore.rotatePage(originalIndex, 90);
+  },
+
+  /**
+   * Rotate a page by 90 degrees counter-clockwise.
+   * @param {number} originalIndex — 0-based
+   */
+  rotateCounterClockwise(originalIndex) {
+    editorStore.rotatePage(originalIndex, -90);
+  },
 };
 
 export default pageOps;
