@@ -129,8 +129,8 @@
         {
           "id": 11,
           "name": "add-shapes",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/11",
           "agents": [
             "frontend",
             "backend",
