@@ -4,6 +4,7 @@
  * Each Wave-2 feature adds to this module.
  */
 import editorStore from './editorStore.js';
+import pdfEditBaker from './pdfEditBaker.js';
 
 const pageOps = {
   // ---- REORDER (feat #4) ----
@@ -101,6 +102,10 @@ const pageOps = {
       const [copiedPage] = await newDoc.copyPages(srcDoc, [originalIndex]);
       newDoc.addPage(copiedPage);
       
+      // Bake edits before rotation
+      const pageEdits = editorStore.state.edits.filter(e => e.page === originalIndex + 1);
+      await pdfEditBaker.bakePageEdits(copiedPage, pageEdits);
+      
       // Apply rotation if needed
       const currentRot = editorStore.state.rotations[originalIndex] || 0;
       if (currentRot !== 0) {
@@ -172,6 +177,9 @@ const pageOps = {
           
           const [copiedPage] = await newDoc.copyPages(srcDoc, [originalIndex]);
           newDoc.addPage(copiedPage);
+          
+          const pageEdits = editorStore.state.edits.filter(e => e.page === originalIndex + 1);
+          await pdfEditBaker.bakePageEdits(copiedPage, pageEdits);
           
           const currentRot = editorStore.state.rotations[originalIndex] || 0;
           if (currentRot !== 0) {

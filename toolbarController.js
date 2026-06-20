@@ -12,6 +12,8 @@ const TOOL_SHORTCUTS = {
   d: 'draw',
   h: 'highlight',
   s: 'shape',
+  i: 'image',
+  w: 'whiteout',
 };
 
 /** Tool metadata for the UI layer */
@@ -21,6 +23,8 @@ const TOOL_CONFIG = {
   draw:      { label: 'Draw',      shortcut: 'D' },
   highlight: { label: 'Highlight', shortcut: 'H' },
   shape:     { label: 'Shape',     shortcut: 'S' },
+  image:     { label: 'Image',     shortcut: 'I' },
+  whiteout:  { label: 'Whiteout',  shortcut: 'W' },
 };
 
 const ZOOM_STEP = 0.25;

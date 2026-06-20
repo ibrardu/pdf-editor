@@ -53,6 +53,18 @@
       <span class="shortcut-badge">S</span>
     </button>
 
+    <button class="tool-btn" data-tool="image" id="tool-image" title="Add Image (I)" aria-label="Add Image">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+      <span>Image</span>
+      <span class="shortcut-badge">I</span>
+    </button>
+
+    <button class="tool-btn" data-tool="whiteout" id="tool-whiteout" title="Whiteout tool (W)" aria-label="Whiteout tool">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3z" fill="white" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span>Whiteout</span>
+      <span class="shortcut-badge">W</span>
+    </button>
+
     <div class="toolbar-sep" aria-hidden="true"></div>
 
     <!-- Split file -->
@@ -95,7 +107,11 @@
         <div id="upload-error" role="alert" aria-live="polite"></div>
       </div>
       <!-- Rendered PDF page -->
-      <canvas id="pdf-canvas"></canvas>
+      <div id="canvas-wrapper">
+        <canvas id="pdf-canvas"></canvas>
+        <canvas id="overlay-canvas"></canvas>
+        <div id="overlay-ui"></div>
+      </div>
     </div>
   </div>
 
@@ -137,13 +153,15 @@
   import uploadHandler from './uploadHandler.js';
   import toolbarController from './toolbarController.js';
   import pageOps from './pageOps.js';
+  import editOverlay from './editOverlay.js';
 
   // ---- CONFIGURE PDF.JS WORKER ----
   window.pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-  // ---- INITIALISE KEYBOARD SHORTCUTS ----
+  // ---- INIT APP ----
   toolbarController.init();
+  editOverlay.init();
 
   // ---- DOM REFERENCES ----
   const uploadZone    = document.getElementById('upload-zone');
@@ -153,6 +171,7 @@
   const mergeFileBtn  = document.getElementById('merge-file-btn');
   const mergeFileInput = document.getElementById('merge-file-input');
   const splitFileBtn  = document.getElementById('split-file-btn');
+  const canvasWrapper = document.getElementById('canvas-wrapper');
   const pdfCanvas     = document.getElementById('pdf-canvas');
   const sidebar       = document.getElementById('sidebar');
   const pageControls  = document.getElementById('page-controls');
@@ -275,14 +294,14 @@
     const hasDoc = !!state.pdfJsDoc;
     if (hasDoc) {
       uploadZone.classList.add('hidden');
-      pdfCanvas.classList.add('visible');
+      canvasWrapper.classList.add('visible');
       sidebar.classList.add('visible');
       pageControls.classList.add('visible');
       mergeFileBtn.style.display = 'inline-flex';
       splitFileBtn.style.display = 'inline-flex';
     } else {
       uploadZone.classList.remove('hidden');
-      pdfCanvas.classList.remove('visible');
+      canvasWrapper.classList.remove('visible');
       sidebar.classList.remove('visible');
       pageControls.classList.remove('visible');
       mergeFileBtn.style.display = 'none';
@@ -328,8 +347,23 @@
       if (!rendering) {
         rendering = true;
         try {
-          const origPage = pageOps.displayToOriginalPage(state.currentPage);
-          await pdfRenderer.renderPage(pdfCanvas, origPage);
+          if (state.pdfJsDoc && state.pageOrder.length > 0) {
+            try {
+              const displayIndex = state.currentPage - 1;
+              const originalIndex = state.pageOrder[displayIndex];
+
+              // Wait for render to complete, then update overlay viewport
+              await pdfRenderer.renderPage(pdfCanvas, originalIndex + 1);
+
+              const page = await state.pdfJsDoc.getPage(originalIndex + 1);
+              const rotation = state.rotations[originalIndex] || 0;
+              const viewport = page.getViewport({ scale: state.zoom, rotation });
+              editOverlay.setViewport(viewport);
+
+            } catch (err) {
+              console.error('Render error:', err);
+            }
+          }
         } finally {
           rendering = false;
         }
