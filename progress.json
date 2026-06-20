@@ -101,8 +101,8 @@
         {
           "id": 9,
           "name": "split-pdf",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/9",
           "agents": [
             "frontend",
             "backend",
