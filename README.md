@@ -23,6 +23,9 @@ v0.1 — Core viewer and shell complete.
   external mutation. Input validation on all setters. Zoom clamped 10%–500%.
   Microtask-batched notifications. reset() for full state clear. 32 unit tests
   (`node editorStore.test.js`).
+- **Page reorder** — Drag-and-drop sidebar thumbnails to reorder pages.
+  Visual drop indicators above/below. Page-order-aware rendering (main canvas
+  and thumbnails respect the custom order).
 
 ## Tech stack
 
@@ -49,6 +52,7 @@ editorStore.js        - shared state contract all features build against
 pdfRenderer.js        - PDF page/thumbnail rendering via pdf.js
 uploadHandler.js      - file upload validation and processing
 toolbarController.js  - keyboard shortcuts and tool configuration
+pageOps.js            - page-level operations (reorder, delete, rotate, extract)
 editorStore.test.js   - unit tests for editorStore contract (node, zero deps)
 dashboard.html        - agent progress dashboard
 progress.json         - live status of every feature/branch
