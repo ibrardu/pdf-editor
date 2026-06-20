@@ -180,6 +180,39 @@
             "backend",
             "security-qa"
           ]
+        },
+        {
+          "id": 24,
+          "name": "undo-redo",
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/18",
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 26,
+          "name": "edit-text-ocr",
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/19",
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
+        },
+        {
+          "id": 27,
+          "name": "annotations",
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/20",
+          "agents": [
+            "frontend",
+            "backend",
+            "security-qa"
+          ]
         }
       ]
     },
@@ -190,8 +223,8 @@
         {
           "id": 16,
           "name": "pdf-to-image",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/21",
           "agents": [
             "frontend",
             "backend",
@@ -201,8 +234,8 @@
         {
           "id": 17,
           "name": "image-to-pdf",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/22",
           "agents": [
             "frontend",
             "backend",
@@ -212,8 +245,8 @@
         {
           "id": 18,
           "name": "pdf-to-text",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/21",
           "agents": [
             "frontend",
             "backend",
@@ -290,8 +323,8 @@
         {
           "id": 24,
           "name": "undo-redo",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/18",
           "agents": [
             "frontend",
             "backend",
