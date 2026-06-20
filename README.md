@@ -6,7 +6,7 @@ no file uploads to a server.
 
 ## Status
 
-v0.2 — Core viewer, shell, and page organization features (Wave 2) complete.
+v0.3 — Core viewer, shell, page organization (Wave 2), and PDF Editing features (Wave 3) complete.
 
 ## Features
 
