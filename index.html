@@ -148,6 +148,12 @@
         </svg>
         <h2>Upload a PDF</h2>
         <p>Drag &amp; drop a file here, or click to browse</p>
+        <div style="margin-top: 1rem;">
+          <button class="file-btn" id="create-pdf-from-images-btn" style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: white; cursor: pointer;">
+            Or Create PDF from Images
+          </button>
+          <input type="file" id="images-to-pdf-input" accept="image/*" multiple style="display:none;" />
+        </div>
         <div id="upload-error" role="alert" aria-live="polite"></div>
       </div>
       <!-- Rendered PDF page -->
@@ -283,6 +289,26 @@
   
   document.getElementById('export-text-btn').addEventListener('click', () => {
     exportHandler.exportText();
+  });
+
+  const createPdfFromImagesBtn = document.getElementById('create-pdf-from-images-btn');
+  const imagesToPdfInput = document.getElementById('images-to-pdf-input');
+
+  createPdfFromImagesBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    imagesToPdfInput.click();
+  });
+
+  imagesToPdfInput.addEventListener('change', async (e) => {
+    const files = e.target.files;
+    if (files.length > 0) {
+      try {
+        await uploadHandler.processImages(files);
+        uploadError.textContent = '';
+      } catch (err) {
+        uploadError.textContent = err.message || 'Failed to create PDF from images.';
+      }
+    }
   });
 
   // ---- DRAG & DROP ----
