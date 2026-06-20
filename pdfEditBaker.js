@@ -45,9 +45,9 @@ const pdfEditBaker = {
           size: fontSize,
           color: rgbColor
         });
-      } else if (edit.type === 'shape') {
+      } else if (edit.type === 'shape' || edit.type === 'highlight' || edit.type === 'whiteout') {
         const { x, y, payload } = edit;
-        const { width, height, color, borderColor, borderWidth } = payload;
+        const { width, height, color, borderColor, borderWidth, opacity, blendMode } = payload;
 
         const rgbFill = color !== 'transparent' ? this.hexToRgb(color) : undefined;
         const rgbBorder = this.hexToRgb(borderColor);
@@ -59,6 +59,11 @@ const pdfEditBaker = {
         // If (0,0) is bottom-left, then y goes UP. So a rectangle starting at (x, y) and going DOWN by `height`
         // means the bottom-left corner is at (x, y - height).
         
+        let pdfBlendMode = undefined;
+        if (blendMode === 'multiply' && typeof window !== 'undefined' && window.PDFLib) {
+          pdfBlendMode = window.PDFLib.BlendMode.Multiply;
+        }
+
         pdfPage.drawRectangle({
           x: x,
           y: y - height,
@@ -66,7 +71,10 @@ const pdfEditBaker = {
           height: height,
           color: rgbFill,
           borderColor: rgbBorder,
-          borderWidth: borderWidth
+          borderWidth: borderWidth,
+          opacity: opacity !== undefined ? opacity : 1.0,
+          borderOpacity: opacity !== undefined ? opacity : 1.0,
+          blendMode: pdfBlendMode
         });
       } else if (edit.type === 'draw') {
         const { payload } = edit;
