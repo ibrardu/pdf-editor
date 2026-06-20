@@ -68,8 +68,8 @@
         {
           "id": 6,
           "name": "page-rotate",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/6",
           "agents": [
             "frontend",
             "backend",
