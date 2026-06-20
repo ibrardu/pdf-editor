@@ -241,6 +241,20 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Drag-and-drop reorder states (feat #4) */
+.thumb-wrap.dragging {
+  opacity: 0.35;
+  transform: scale(0.95);
+}
+.thumb-wrap.drag-over-above {
+  border-top-color: var(--accent);
+  box-shadow: 0 -2px 0 0 var(--accent);
+}
+.thumb-wrap.drag-over-below {
+  border-bottom-color: var(--accent);
+  box-shadow: 0 2px 0 0 var(--accent);
+}
+
 /* ---- CANVAS AREA ---- */
 #canvas-area {
   flex: 1;

@@ -123,6 +123,7 @@
   import pdfRenderer from './pdfRenderer.js';
   import uploadHandler from './uploadHandler.js';
   import toolbarController from './toolbarController.js';
+  import pageOps from './pageOps.js';
 
   // ---- CONFIGURE PDF.JS WORKER ----
   window.pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -222,6 +223,7 @@
   let currentDocRef = null;
   let lastRenderedPage = -1;
   let lastRenderedZoom = -1;
+  let lastPageOrderStr = '';
   let rendering = false;
 
   editorStore.subscribe(async (state) => {
@@ -258,7 +260,7 @@
     prevPageBtn.disabled = state.currentPage <= 1;
     nextPageBtn.disabled = state.currentPage >= state.totalPages;
 
-    // Render page if page or zoom changed
+    // Render page if page or zoom changed (map display pos → original page)
     if (
       state.currentPage !== lastRenderedPage ||
       state.zoom !== lastRenderedZoom
@@ -268,16 +270,19 @@
       if (!rendering) {
         rendering = true;
         try {
-          await pdfRenderer.renderPage(pdfCanvas, state.currentPage);
+          const origPage = pageOps.displayToOriginalPage(state.currentPage);
+          await pdfRenderer.renderPage(pdfCanvas, origPage);
         } finally {
           rendering = false;
         }
       }
     }
 
-    // Render thumbnails when a new document is loaded
-    if (state.pdfJsDoc !== currentDocRef) {
-      currentDocRef = state.pdfJsDoc;
+    // Render thumbnails on new doc or page-order change
+    const orderStr = JSON.stringify(state.pageOrder);
+    if (state.pdfJsDoc !== currentDocRef || orderStr !== lastPageOrderStr) {
+      if (state.pdfJsDoc !== currentDocRef) currentDocRef = state.pdfJsDoc;
+      lastPageOrderStr = orderStr;
       await renderThumbnails(state);
     }
 
@@ -285,40 +290,83 @@
     updateActiveThumbnail(state.currentPage);
   });
 
-  // ---- THUMBNAIL RENDERING ----
+  // ---- THUMBNAIL RENDERING (page-order aware + drag-and-drop reorder) ----
+  let dragSrcIdx = null;
+
   async function renderThumbnails(state) {
-    // Preserve the sidebar heading, clear thumbnails
     const heading = sidebar.querySelector('.sidebar-heading');
     while (sidebar.lastChild && sidebar.lastChild !== heading) {
       sidebar.removeChild(sidebar.lastChild);
     }
 
-    for (let i = 1; i <= state.totalPages; i++) {
+    const order = state.pageOrder;
+    for (let displayIdx = 0; displayIdx < order.length; displayIdx++) {
+      const originalIndex = order[displayIdx];
+      const pageNum = originalIndex + 1; // 1-based for pdf.js
+      const displayPos = displayIdx + 1; // 1-based for setPage
+
       const wrap = document.createElement('div');
       wrap.className = 'thumb-wrap';
-      wrap.dataset.page = String(i);
+      wrap.dataset.page = String(displayPos);
+      wrap.dataset.displayIndex = String(displayIdx);
       wrap.setAttribute('role', 'button');
-      wrap.setAttribute('aria-label', `Go to page ${i}`);
+      wrap.setAttribute('aria-label', `Page ${displayPos}`);
       wrap.tabIndex = 0;
+      wrap.draggable = true;
 
       const canvas = document.createElement('canvas');
       wrap.appendChild(canvas);
 
       const label = document.createElement('div');
       label.className = 'thumb-label';
-      label.textContent = String(i);
+      label.textContent = String(displayPos);
       wrap.appendChild(label);
 
-      wrap.addEventListener('click', () => editorStore.setPage(i));
+      // Click → navigate
+      wrap.addEventListener('click', () => editorStore.setPage(displayPos));
       wrap.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); editorStore.setPage(i); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); editorStore.setPage(displayPos); }
       });
+
+      // Drag-and-drop reorder
+      wrap.addEventListener('dragstart', (e) => {
+        dragSrcIdx = displayIdx;
+        wrap.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      wrap.addEventListener('dragend', () => {
+        wrap.classList.remove('dragging');
+        dragSrcIdx = null;
+        sidebar.querySelectorAll('.drag-over-above,.drag-over-below').forEach(
+          el => el.classList.remove('drag-over-above', 'drag-over-below')
+        );
+      });
+      wrap.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const rect = wrap.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        wrap.classList.toggle('drag-over-above', e.clientY < midY);
+        wrap.classList.toggle('drag-over-below', e.clientY >= midY);
+      });
+      wrap.addEventListener('dragleave', () => {
+        wrap.classList.remove('drag-over-above', 'drag-over-below');
+      });
+      wrap.addEventListener('drop', (e) => {
+        e.preventDefault();
+        wrap.classList.remove('drag-over-above', 'drag-over-below');
+        const toIdx = parseInt(wrap.dataset.displayIndex, 10);
+        if (dragSrcIdx !== null && dragSrcIdx !== toIdx) {
+          pageOps.movePage(dragSrcIdx, toIdx);
+        }
+      });
+
       sidebar.appendChild(wrap);
 
       try {
-        await pdfRenderer.renderThumbnail(canvas, i);
+        await pdfRenderer.renderThumbnail(canvas, pageNum);
       } catch (err) {
-        console.warn(`Thumbnail render failed for page ${i}:`, err);
+        console.warn(`Thumbnail render failed for page ${displayPos}:`, err);
       }
     }
 
