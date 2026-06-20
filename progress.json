@@ -29,8 +29,8 @@
         {
           "id": 3,
           "name": "editor-store",
-          "status": "in_progress",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/3",
           "agents": [
             "frontend",
             "backend",
