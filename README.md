@@ -6,11 +6,14 @@ no file uploads to a server.
 
 ## Status
 
-Project scaffold only. No features merged yet.
+v0.1 — Core viewer in progress.
 
 ## Features
 
-_None merged yet. This section is updated by each feature PR as it lands on main._
+- **PDF upload & render** — Upload a PDF via drag-and-drop or file picker.
+  Renders pages to canvas using pdf.js. Page thumbnails in sidebar, page
+  navigation (prev/next), and zoom controls (25% steps). File validation
+  enforces PDF-only, max 100 MB, non-empty.
 
 ## Tech stack
 
