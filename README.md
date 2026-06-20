@@ -33,6 +33,8 @@ v0.1 — Core viewer and shell complete.
   thumbnail (↻ / ↺). Updates both thumbnail and main canvas rendering.
 - **Page extract** — Extract button on each thumbnail (⇲). Downloads a new
   PDF containing only that specific page, with rotations applied.
+- **Merge PDF** — "Merge PDF" button in the toolbar (only visible when a doc
+  is loaded) to pick another PDF and append its pages to the current document.
 
 ## Tech stack
 
