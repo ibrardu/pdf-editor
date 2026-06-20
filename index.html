@@ -29,10 +29,16 @@
       <span class="shortcut-badge">V</span>
     </button>
 
-    <button class="tool-btn" data-tool="text" id="tool-text" title="Text tool (T)" aria-label="Text tool">
+    <button class="tool-btn" data-tool="text" id="tool-text" title="Add Text (T)" aria-label="Add Text">
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.2 48.2 0 0 0 5.887-.51c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.4 48.4 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
-      <span>Text</span>
+      <span>Add Text</span>
       <span class="shortcut-badge">T</span>
+    </button>
+
+    <button class="tool-btn" data-tool="edit-text" id="tool-edit-text" title="Edit Existing Text (E)" aria-label="Edit Text">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+      <span>Edit Text</span>
+      <span class="shortcut-badge">E</span>
     </button>
 
     <button class="tool-btn" data-tool="draw" id="tool-draw" title="Draw tool (D)" aria-label="Draw tool">
@@ -160,7 +166,7 @@
 <!-- CDN: pdf.js for rendering, pdf-lib for editing -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script type="module">
   import editorStore from './editorStore.js';
   import pdfRenderer from './pdfRenderer.js';
@@ -327,6 +333,7 @@
       const keyMap = {
         'v': 'select',
         't': 'text',
+        'e': 'edit-text',
         'd': 'draw',
         'h': 'highlight',
         's': 'shape',
