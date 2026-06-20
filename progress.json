@@ -118,8 +118,8 @@
         {
           "id": 10,
           "name": "add-text",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/10",
           "agents": [
             "frontend",
             "backend",
