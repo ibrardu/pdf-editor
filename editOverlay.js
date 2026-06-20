@@ -66,6 +66,11 @@ const editOverlay = {
     const [pdfX, pdfY] = currentViewport.convertToPdfPoint(x, y);
 
     if (activeTool === 'text') {
+      if (activeInput) {
+        this.commitTextEntry();
+        editorStore.setActiveTool('select');
+        return;
+      }
       this.startTextEntry(x, y, pdfX, pdfY, currentPage);
     } else if (activeTool === 'shape') {
       this.isDrawingShape = true;
