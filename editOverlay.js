@@ -47,7 +47,7 @@ const editOverlay = {
 
     // Draw active shape or path
     if (this.isDrawingShape && this.activeShape) {
-      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight') {
+      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight' || this.activeShape.type === 'whiteout') {
         editRenderer.drawShape(overlayCtx, this.activeShape, currentViewport);
       } else if (this.activeShape.type === 'draw') {
         editRenderer.drawPath(overlayCtx, this.activeShape, currentViewport);
@@ -80,7 +80,7 @@ const editOverlay = {
       this.startTextEntry(x, y, pdfX, pdfY, currentPage);
     } else if (activeTool === 'image' && pendingImageDataUrl) {
       this.placeImage(pdfX, pdfY, pendingImageDataUrl, currentPage);
-    } else if (activeTool === 'shape' || activeTool === 'highlight') {
+    } else if (activeTool === 'shape' || activeTool === 'highlight' || activeTool === 'whiteout') {
       this.isDrawingShape = true;
 
       let color = 'transparent';
@@ -95,6 +95,10 @@ const editOverlay = {
         borderWidth = 0;
         opacity = 0.5;
         blendMode = 'multiply';
+      } else if (activeTool === 'whiteout') {
+        color = '#ffffff';
+        borderColor = 'transparent';
+        borderWidth = 0;
       }
 
       this.activeShape = {
@@ -136,7 +140,7 @@ const editOverlay = {
       
       const [pdfX, pdfY] = currentViewport.convertToPdfPoint(x, y);
       
-      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight') {
+      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight' || this.activeShape.type === 'whiteout') {
         this.activeShape.payload.width = pdfX - this.activeShape.startX;
         this.activeShape.payload.height = pdfY - this.activeShape.startY;
       } else if (this.activeShape.type === 'draw') {
@@ -151,7 +155,7 @@ const editOverlay = {
     if (this.isDrawingShape && this.activeShape) {
       this.isDrawingShape = false;
       
-      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight') {
+      if (this.activeShape.type === 'shape' || this.activeShape.type === 'highlight' || this.activeShape.type === 'whiteout') {
         // Normalize width/height and x/y
         let { startX, startY } = this.activeShape;
         let { width, height } = this.activeShape.payload;
