@@ -7,8 +7,8 @@
         {
           "id": 1,
           "name": "pdf-upload-and-render",
-          "status": "in_progress",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/1",
           "agents": [
             "frontend",
             "backend",
@@ -18,8 +18,8 @@
         {
           "id": 2,
           "name": "app-shell-and-toolbar",
-          "status": "in_progress",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/2",
           "agents": [
             "frontend",
             "backend",
