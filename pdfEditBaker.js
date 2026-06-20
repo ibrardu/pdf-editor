@@ -105,6 +105,30 @@ const pdfEditBaker = {
           borderColor: rgbColor,
           borderWidth: borderWidth
         });
+      } else if (edit.type === 'image') {
+        const { x, y, payload } = edit;
+        const { dataUrl, width, height } = payload;
+
+        try {
+          const base64Data = dataUrl.split(',')[1];
+          const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+          
+          let embeddedImage;
+          if (dataUrl.startsWith('data:image/png')) {
+            embeddedImage = await pdfDoc.embedPng(imageBytes);
+          } else {
+            embeddedImage = await pdfDoc.embedJpg(imageBytes);
+          }
+
+          pdfPage.drawImage(embeddedImage, {
+            x: x,
+            y: y - height,
+            width: width,
+            height: height
+          });
+        } catch (err) {
+          console.error('Failed to bake image:', err);
+        }
       }
     }
   },

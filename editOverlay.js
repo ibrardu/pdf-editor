@@ -9,6 +9,7 @@ let overlayCanvas, overlayCtx, uiContainer;
 let currentViewport = null;
 
 let activeInput = null;
+let pendingImageDataUrl = null;
 
 const editOverlay = {
   init() {
@@ -29,6 +30,11 @@ const editOverlay = {
   setViewport(viewport) {
     currentViewport = viewport;
     this.render();
+  },
+
+  setPendingImage(dataUrl) {
+    pendingImageDataUrl = dataUrl;
+    editorStore.setActiveTool('image');
   },
 
   render() {
@@ -67,6 +73,8 @@ const editOverlay = {
 
     if (activeTool === 'text') {
       this.startTextEntry(x, y, pdfX, pdfY, currentPage);
+    } else if (activeTool === 'image' && pendingImageDataUrl) {
+      this.placeImage(pdfX, pdfY, pendingImageDataUrl, currentPage);
     } else if (activeTool === 'shape' || activeTool === 'highlight' || activeTool === 'whiteout') {
       this.isDrawingShape = true;
 
@@ -239,6 +247,38 @@ const editOverlay = {
     }
     input.remove();
     activeInput = null;
+  },
+
+  placeImage(pdfX, pdfY, dataUrl, page) {
+    // Determine image dimensions
+    const img = new Image();
+    img.onload = () => {
+      let width = img.width;
+      let height = img.height;
+
+      // Scale down if it's too large
+      const maxDim = 300;
+      if (width > maxDim || height > maxDim) {
+        const ratio = Math.min(maxDim / width, maxDim / height);
+        width *= ratio;
+        height *= ratio;
+      }
+
+      editorStore.addEdit({
+        type: 'image',
+        page,
+        x: pdfX,
+        y: pdfY,
+        payload: {
+          dataUrl,
+          width,
+          height
+        }
+      });
+      pendingImageDataUrl = null;
+      editorStore.setActiveTool('select');
+    };
+    img.src = dataUrl;
   }
 };
 

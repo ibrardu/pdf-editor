@@ -68,17 +68,19 @@
     <div class="toolbar-sep" aria-hidden="true"></div>
 
     <!-- Split file -->
-    <button class="file-btn" id="split-file-btn" title="Split PDF at current page" aria-label="Split PDF" style="display: none;">
+    <button class="tool-btn" id="split-file-btn" title="Split PDF (at current page)" aria-label="Split PDF" style="display:none;">
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" /></svg>
-      <span>Split PDF</span>
+      <span>Split</span>
     </button>
 
     <!-- Merge file -->
-    <button class="file-btn" id="merge-file-btn" title="Merge a PDF file" aria-label="Merge PDF file" style="display: none;">
+    <button class="tool-btn" id="merge-file-btn" title="Merge another PDF" aria-label="Merge PDF" style="display:none;">
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-      <span>Merge PDF</span>
+      <span>Merge</span>
     </button>
-    <input type="file" id="merge-file-input" accept="application/pdf" />
+    <input type="file" id="merge-file-input" accept="application/pdf" style="display:none;" />
+    
+    <input type="file" id="image-upload-input" accept="image/png, image/jpeg" style="display:none;" />
 
     <!-- Open file -->
     <button class="file-btn" id="open-file-btn" title="Open a PDF file" aria-label="Open PDF file">
@@ -170,6 +172,7 @@
   const openFileBtn   = document.getElementById('open-file-btn');
   const mergeFileBtn  = document.getElementById('merge-file-btn');
   const mergeFileInput = document.getElementById('merge-file-input');
+  const imageUploadInput = document.getElementById('image-upload-input');
   const splitFileBtn  = document.getElementById('split-file-btn');
   const canvasWrapper = document.getElementById('canvas-wrapper');
   const pdfCanvas     = document.getElementById('pdf-canvas');
@@ -274,9 +277,27 @@
     editorStore.setZoom(1.0);
   });
 
-  // ---- TOOLBAR TOOL BUTTONS ----
-  document.querySelectorAll('.tool-btn[data-tool]').forEach((btn) => {
-    btn.addEventListener('click', () => editorStore.setActiveTool(btn.dataset.tool));
+  // ---- TOOLBAR TOOL // Tool activation
+  document.querySelectorAll('.tool-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tool = btn.dataset.tool;
+      editorStore.setActiveTool(tool);
+      if (tool === 'image') {
+        imageUploadInput.click();
+      }
+    });
+  });
+
+  imageUploadInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      editOverlay.setPendingImage(reader.result);
+      imageUploadInput.value = '';
+    };
+    reader.readAsDataURL(file);
   });
 
   // ---- RENDER SUBSCRIPTION ----
