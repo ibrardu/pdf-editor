@@ -37,6 +37,35 @@ const pageOps = {
     if (idx < 0 || idx >= order.length) return displayPos;
     return order[idx] + 1;
   },
+
+  // ---- DELETE / RESTORE (feat #5) ----
+
+  /**
+   * Toggle deletion state for a page by its original 0-based index.
+   * Cannot delete if it would leave zero visible pages.
+   * @param {number} originalIndex — 0-based
+   * @returns {boolean} true if the toggle succeeded
+   */
+  toggleDelete(originalIndex) {
+    if (editorStore.state.deletedPages.has(originalIndex)) {
+      editorStore.restorePage(originalIndex);
+      return true;
+    }
+    // Prevent deleting all pages
+    const visible = editorStore.getVisiblePages();
+    if (visible.length <= 1) return false;
+    editorStore.deletePage(originalIndex);
+    return true;
+  },
+
+  /**
+   * Check if a page is marked as deleted.
+   * @param {number} originalIndex — 0-based
+   * @returns {boolean}
+   */
+  isPageDeleted(originalIndex) {
+    return editorStore.state.deletedPages.has(originalIndex);
+  },
 };
 
 export default pageOps;

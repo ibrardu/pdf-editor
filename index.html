@@ -224,6 +224,7 @@
   let lastRenderedPage = -1;
   let lastRenderedZoom = -1;
   let lastPageOrderStr = '';
+  let lastDeletedSize = -1;
   let rendering = false;
 
   editorStore.subscribe(async (state) => {
@@ -278,11 +279,13 @@
       }
     }
 
-    // Render thumbnails on new doc or page-order change
+    // Render thumbnails on new doc, page-order change, or deletion change
     const orderStr = JSON.stringify(state.pageOrder);
-    if (state.pdfJsDoc !== currentDocRef || orderStr !== lastPageOrderStr) {
+    const delSize = state.deletedPages.size;
+    if (state.pdfJsDoc !== currentDocRef || orderStr !== lastPageOrderStr || delSize !== lastDeletedSize) {
       if (state.pdfJsDoc !== currentDocRef) currentDocRef = state.pdfJsDoc;
       lastPageOrderStr = orderStr;
+      lastDeletedSize = delSize;
       await renderThumbnails(state);
     }
 
@@ -321,6 +324,20 @@
       label.className = 'thumb-label';
       label.textContent = String(displayPos);
       wrap.appendChild(label);
+
+      // Delete/restore button
+      const isDeleted = pageOps.isPageDeleted(originalIndex);
+      if (isDeleted) wrap.classList.add('deleted');
+      const delBtn = document.createElement('button');
+      delBtn.className = 'thumb-action-btn thumb-delete-btn';
+      delBtn.setAttribute('aria-label', isDeleted ? `Restore page ${displayPos}` : `Delete page ${displayPos}`);
+      delBtn.title = isDeleted ? 'Restore' : 'Delete';
+      delBtn.textContent = isDeleted ? '↩' : '✕';
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pageOps.toggleDelete(originalIndex);
+      });
+      wrap.appendChild(delBtn);
 
       // Click → navigate
       wrap.addEventListener('click', () => editorStore.setPage(displayPos));
