@@ -36,10 +36,9 @@ const state = {
   rotations: {},             // { pageIndex: degrees }
 
   // ---- CONTENT EDITS ----
-  edits: [
-    // { id, type: 'text'|'shape'|'draw'|'highlight'|'image'|'whiteout',
-    //   page: number, x, y, width, height, payload: {...} }
-  ],
+  activeTool: 'select', // 'select', 'text', 'draw', 'highlight', 'shape', 'image', 'whiteout'
+  edits: [], // Array of edit objects { type, page, x, y, payload }
+  undoneEdits: [], // Array of edits that were undone
 
   // ---- SIGN & SECURE ----
   signature: null,
@@ -49,7 +48,6 @@ const state = {
   // ---- UI / HISTORY ----
   history: [],
   historyIndex: -1,
-  activeTool: 'select',
 };
 
 let nextEditId = 1;
@@ -83,6 +81,7 @@ const readOnlyProxy = new Proxy(state, {
     // Wrap arrays as copies
     if (prop === 'pageOrder') return [...val];
     if (prop === 'edits') return val.map((e) => ({ ...e }));
+    if (prop === 'undoneEdits') return val.map((e) => ({ ...e }));
     if (prop === 'history') return []; // don't leak mutable history
     // Wrap plain objects as copies
     if (prop === 'rotations') return { ...val };
@@ -111,6 +110,7 @@ function deepCloneState() {
     deletedPages: new Set(state.deletedPages),
     rotations: { ...state.rotations },
     edits: state.edits.map((e) => ({ ...e })),
+    undoneEdits: state.undoneEdits.map((e) => ({ ...e })),
     signature: state.signature,
     password: state.password,
     watermark: state.watermark,
@@ -166,6 +166,7 @@ const editorStore = {
     state.deletedPages = new Set();
     state.rotations = {};
     state.edits = [];
+    state.undoneEdits = [];
     state.currentPage = 1;
     state.history = [];
     state.historyIndex = -1;
@@ -251,6 +252,7 @@ const editorStore = {
     if (!editObject || typeof editObject !== 'object') return null;
     const id = `edit_${nextEditId++}`;
     state.edits.push({ id, ...editObject });
+    state.undoneEdits = []; // Clear redo history on new edit
     notify();
     return id;
   },
@@ -266,6 +268,20 @@ const editorStore = {
   removeEdit(id) {
     if (typeof id !== 'string') return;
     state.edits = state.edits.filter((e) => e.id !== id);
+    notify();
+  },
+
+  undoEdit() {
+    if (state.edits.length === 0) return;
+    const lastEdit = state.edits.pop();
+    state.undoneEdits.push(lastEdit);
+    notify();
+  },
+
+  redoEdit() {
+    if (state.undoneEdits.length === 0) return;
+    const nextEdit = state.undoneEdits.pop();
+    state.edits.push(nextEdit);
     notify();
   },
 

@@ -31,9 +31,8 @@ Every feature branch is built by three coordinating agents, not one:
 
 2. Backend agent
    - Owns logic: pdf-lib operations, editorStore method implementations,
-     export/flatten logic, hardening/validation inside editorStore.js
+     export/flatten logic
    - Exposes a clear function/method signature the Frontend agent can call
-   - Writes/maintains unit tests for any module it owns (e.g. editorStore.test.js)
    - Does not write UI code
 
 3. Security/QA agent
@@ -43,15 +42,13 @@ Every feature branch is built by three coordinating agents, not one:
      (e.g. direct state mutation), missing/insufficient tests, secrets or
      credentials committed, oversized bundle additions
    - Confirms README.md was updated for this feature (see below)
-   - Confirms progress.json status and version reflect verified reality
+   - Confirms progress.json status reflects verified reality (see status rules)
    - Is the ONLY agent allowed to approve a PR for merge. Frontend/Backend
      agents may open PRs but cannot self-approve or merge.
 
 Coordination: Frontend and Backend agents work in parallel on the same branch,
 splitting files by concern (UI files vs logic files), then both hand off to
-Security/QA on that same branch before a PR is opened. If Security/QA finds
-issues, it sends the diff back with specific required fixes — it does not fix
-the code itself.
+Security/QA on that same branch before a PR is opened.
 
 ## Loop-level Security/QA agent
 
@@ -63,22 +60,8 @@ additional Security/QA agent scoped to the whole wave, not a single PR:
 - Checks dependency conflicts introduced across features
 - Confirms progress.json and README.md are consistent with what is actually
   on main after the wave's merges
-- Confirms the version number was bumped correctly for the wave (see Versioning)
 - Produces a short wave security report; blocks the next wave from starting
   if it finds an unresolved issue
-
-## Versioning
-
-Use semantic-style versioning tied to the wave structure: v0.<wave>.<patch>
-  - Wave number increments the minor version (v0.1.x -> v0.2.x) once that
-    wave's features start merging
-  - Each individual feature merge within a wave increments the patch number
-    (v0.2.0 -> v0.2.1 -> v0.2.2 ...)
-  - The Security/QA agent for each PR sets the new version number in
-    progress.json's top-level "version" field and in README.md's Status line
-    as part of approval
-  - Never skip or guess a version number — read the current version from
-    progress.json's top-level "version" field, increment it, write it back
 
 ## Status values — sequential, verified, never assumed
 
@@ -96,16 +79,12 @@ or API response before writing any status.
 
 ## Updating progress.json
 
-Top-level field: "version" — current shipped version on main, e.g. "v0.2.3".
-
 Feature object shape:
 { "id": <nr>, "name": "<feature-name>", "status": "<status above>",
-  "pr": "<real PR url or null>", "version": "<version this feature shipped in>",
-  "agents": ["frontend","backend","security-qa"] }
+  "pr": "<real PR url or null>", "agents": ["frontend","backend","security-qa"] }
 
 Rules:
-- Only edit your own feature's object (and the top-level version field, only
-  if you are the Security/QA agent approving that merge).
+- Only edit your own feature's object.
 - Re-read progress.json from disk before writing, to avoid clobbering a
   concurrent update from another agent.
 - "pr" must be a real URL returned by gh, never fabricated.
@@ -114,7 +93,7 @@ Rules:
 
 Whenever a PR adds, removes, or changes user-facing functionality:
 - Update README.md's "Features" section to reflect the change
-- Update the version/status line to match the new version
+- Update the version/status line if applicable
 - This update must be included IN THE SAME PR, not a follow-up
 - The Security/QA agent blocks merge if README.md was not updated to match
   the actual shipped functionality
@@ -122,44 +101,9 @@ Whenever a PR adds, removes, or changes user-facing functionality:
 README.md must always describe what is truly on main — never aspirational
 or in-progress features.
 
-## Required PR description format
-
-Every PR must use this exact structure. Each agent fills in only its own
-section. Omit a section entirely if that agent made no changes (do not
-write "no changes" filler unless it's relevant context, as shown below).
-
-```
-## Summary
-**Backend agent:**
-- <bullet list of logic/data changes, file by file, specific enough to review>
-- <tests added/updated, with pass count, e.g. "32/32 tests pass">
-
-**Frontend agent:**
-- <bullet list of UI changes, or a one-line note if no changes were needed
-  and why, e.g. "No index.html changes needed — API-compatible">
-
-**Security/QA agent:** Approved ✅ (or: Changes requested ⚠️)
-- <bullet list of what was checked and confirmed>
-- <test results confirmed>
-- <README.md and progress.json verified updated>
-
-### Files changed
-| File | Agent | Action |
-|------|-------|--------|
-| `<file>` | Frontend / Backend / Both / Orchestrator | NEW / MODIFIED / DELETED |
-
-### Version
-<old version> -> <new version>
-```
-
-If Security/QA requests changes instead of approving, status in progress.json
-must be "blocked", not "pr_open" or "merged", until a follow-up commit resolves
-the requested changes and Security/QA re-approves.
-
 ## Dashboard
 
-dashboard.html reads progress.json and renders status, version, and assigned
-agents per feature. It must be served over local HTTP, not opened as a
-file:// URL (fetch is blocked under file://). Run `npx serve .` or
-`python3 -m http.server 8000` from repo root, then open the printed
-localhost URL.
+dashboard.html reads progress.json and renders status per feature. It must be
+served over local HTTP, not opened as a file:// URL (fetch is blocked under
+file://). Run `npx serve .` or `python3 -m http.server 8000` from repo root,
+then open the printed localhost URL.
