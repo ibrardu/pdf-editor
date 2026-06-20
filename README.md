@@ -26,6 +26,9 @@ v0.1 — Core viewer and shell complete.
 - **Page reorder** — Drag-and-drop sidebar thumbnails to reorder pages.
   Visual drop indicators above/below. Page-order-aware rendering (main canvas
   and thumbnails respect the custom order).
+- **Page delete** — Delete/restore button on each thumbnail (✕ / ↩). Deleted
+  pages shown greyed-out with grayscale filter. Cannot delete the last
+  remaining page.
 
 ## Tech stack
 
