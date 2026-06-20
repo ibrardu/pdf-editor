@@ -46,8 +46,8 @@
         {
           "id": 4,
           "name": "page-reorder",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/4",
           "agents": [
             "frontend",
             "backend",
@@ -57,8 +57,8 @@
         {
           "id": 5,
           "name": "page-delete",
-          "status": "todo",
-          "pr": null,
+          "status": "merged",
+          "pr": "https://github.com/ibrardu/pdf-editor/pull/5",
           "agents": [
             "frontend",
             "backend",
