@@ -4,9 +4,13 @@ A free, browser-based PDF editor inspired by iLovePDF / SmallPDF. Runs entirely
 client-side using pdf.js (rendering) and pdf-lib (editing/export) — no backend,
 no file uploads to a server.
 
-## Status
-
-v0.3 — Core viewer, shell, page organization (Wave 2), and PDF Editing features (Wave 3) complete.
+### Status
+- **v0.1** — Core viewer and shell complete.
+- **v0.2** — Organize PDF complete.
+- **v0.3** — Edit PDF complete (including Undo/Redo, OCR text editing, and Annotations).
+- **v0.4** — Convert PDF complete (PDF to Image, Image to PDF, PDF to Text exports).
+- **v0.5** — Sign and secure (Pending).
+- **v0.6** — Export and polish (Pending).
 
 ## Features
 
