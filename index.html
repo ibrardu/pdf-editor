@@ -79,18 +79,6 @@
 
     <div class="toolbar-sep" aria-hidden="true"></div>
 
-    <!-- Undo / Redo -->
-    <button class="tool-btn" id="undo-btn" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
-      <span>Undo</span>
-    </button>
-    <button class="tool-btn" id="redo-btn" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" /></svg>
-      <span>Redo</span>
-    </button>
-
-    <div class="toolbar-sep" aria-hidden="true"></div>
-
     <!-- Split file -->
     <button class="file-btn" id="split-file-btn" title="Split PDF at current page" aria-label="Split PDF" style="display: none;">
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" /></svg>
@@ -141,6 +129,18 @@
 
     <!-- Canvas area -->
     <div id="canvas-area">
+      <!-- Floating Toolbar for Undo/Redo -->
+      <div id="floating-toolbar" style="display: none;">
+        <button class="tool-btn" id="undo-btn" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
+          <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
+          <span>Undo</span>
+        </button>
+        <button class="tool-btn" id="redo-btn" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
+          <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" /></svg>
+          <span>Redo</span>
+        </button>
+      </div>
+
       <!-- Upload zone (shown when no PDF loaded) -->
       <div id="upload-zone" role="button" tabindex="0" aria-label="Upload a PDF file">
         <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
@@ -149,7 +149,8 @@
         <h2>Upload a PDF</h2>
         <p>Drag &amp; drop a file here, or click to browse</p>
         <div style="margin-top: 1rem;">
-          <button class="file-btn" id="create-pdf-from-images-btn" style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: white; cursor: pointer;">
+          <button class="file-btn" id="create-pdf-from-images-btn" style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
             Or Create PDF from Images
           </button>
           <input type="file" id="images-to-pdf-input" accept="image/*" multiple style="display:none;" />
@@ -448,6 +449,7 @@
       document.getElementById('export-pdf-btn').style.display = 'inline-flex';
       document.getElementById('export-images-btn').style.display = 'inline-flex';
       document.getElementById('export-text-btn').style.display = 'inline-flex';
+      document.getElementById('floating-toolbar').style.display = 'flex';
     } else {
       uploadZone.classList.remove('hidden');
       canvasWrapper.classList.remove('visible');
@@ -458,6 +460,7 @@
       document.getElementById('export-pdf-btn').style.display = 'none';
       document.getElementById('export-images-btn').style.display = 'none';
       document.getElementById('export-text-btn').style.display = 'none';
+      document.getElementById('floating-toolbar').style.display = 'none';
     }
 
     // Active tool highlighting
