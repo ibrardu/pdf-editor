@@ -173,6 +173,37 @@ const editorStore = {
     notify();
   },
 
+  async appendPdf(bytes) {
+    if (!(bytes instanceof Uint8Array) || bytes.length === 0) {
+      throw new TypeError('appendPdf requires a non-empty Uint8Array');
+    }
+    if (typeof window === 'undefined' || !window.PDFLib) return;
+
+    const PDFDocument = window.PDFLib.PDFDocument;
+    const currentDoc = await PDFDocument.load(state.originalBytes);
+    const newDoc = await PDFDocument.load(bytes);
+    
+    const newPages = await currentDoc.copyPages(newDoc, newDoc.getPageIndices());
+    newPages.forEach((p) => currentDoc.addPage(p));
+    
+    const mergedBytes = await currentDoc.save();
+    state.originalBytes = mergedBytes;
+    
+    const addedCount = newDoc.getPageCount();
+    
+    if (window.pdfjsLib) {
+      state.pdfJsDoc = await window.pdfjsLib.getDocument({ data: mergedBytes.slice() }).promise;
+    }
+    
+    const startIdx = state.totalPages;
+    state.totalPages += addedCount;
+    for (let i = 0; i < addedCount; i++) {
+      state.pageOrder.push(startIdx + i);
+    }
+    
+    notify();
+  },
+
   setPage(index) {
     if (!isPositiveInt(index)) return;
     if (index < 1 || index > state.totalPages) return;

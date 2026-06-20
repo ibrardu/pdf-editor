@@ -467,7 +467,7 @@ html, body {
 }
 
 /* ---- VISUALLY-HIDDEN FILE INPUT ---- */
-#file-input {
+#file-input, #merge-file-input {
   position: absolute;
   width: 1px; height: 1px;
   overflow: hidden;

@@ -92,10 +92,10 @@ const pageOps = {
    * @param {number} originalIndex — 0-based
    */
   async extractPage(originalIndex) {
-    if (!editorStore.state.pdfBytes) return;
+    if (!editorStore.state.originalBytes) return;
     try {
       const PDFDocument = window.PDFLib.PDFDocument;
-      const srcDoc = await PDFDocument.load(editorStore.state.pdfBytes);
+      const srcDoc = await PDFDocument.load(editorStore.state.originalBytes);
       const newDoc = await PDFDocument.create();
       
       const [copiedPage] = await newDoc.copyPages(srcDoc, [originalIndex]);
@@ -123,6 +123,24 @@ const pageOps = {
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Failed to extract page:', err);
+    }
+  },
+
+  // ---- MERGE (feat #8) ----
+  
+  /**
+   * Append pages from another PDF file to the current document.
+   * @param {File} file
+   */
+  async mergePdf(file) {
+    if (!editorStore.state.originalBytes) return;
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      await editorStore.appendPdf(bytes);
+    } catch (err) {
+      console.error('Failed to merge PDF:', err);
+      alert('Failed to merge PDF: ' + err.message);
     }
   },
 };
