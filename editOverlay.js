@@ -39,9 +39,13 @@ const editOverlay = {
     const pageEdits = edits.filter(e => e.page === currentPage);
     editRenderer.drawEdits(overlayCtx, pageEdits, currentViewport);
 
-    // Draw active drawing
+    // Draw active shape or path
     if (this.isDrawingShape && this.activeShape) {
-      editRenderer.drawShape(overlayCtx, this.activeShape, currentViewport);
+      if (this.activeShape.type === 'shape') {
+        editRenderer.drawShape(overlayCtx, this.activeShape, currentViewport);
+      } else if (this.activeShape.type === 'draw') {
+        editRenderer.drawPath(overlayCtx, this.activeShape, currentViewport);
+      }
     }
   },
 
@@ -80,6 +84,17 @@ const editOverlay = {
           borderWidth: 2
         }
       };
+    } else if (activeTool === 'draw') {
+      this.isDrawingShape = true;
+      this.activeShape = {
+        type: 'draw',
+        page: currentPage,
+        payload: {
+          points: [[pdfX, pdfY]], // array of [x, y] in PDF coords
+          color: '#4f46e5',
+          borderWidth: 3
+        }
+      };
     }
   },
 
@@ -91,11 +106,13 @@ const editOverlay = {
       
       const [pdfX, pdfY] = currentViewport.convertToPdfPoint(x, y);
       
-      this.activeShape.payload.width = pdfX - this.activeShape.startX;
-      this.activeShape.payload.height = pdfY - this.activeShape.startY;
+      if (this.activeShape.type === 'shape') {
+        this.activeShape.payload.width = pdfX - this.activeShape.startX;
+        this.activeShape.payload.height = pdfY - this.activeShape.startY;
+      } else if (this.activeShape.type === 'draw') {
+        this.activeShape.payload.points.push([pdfX, pdfY]);
+      }
       
-      // Keep x,y as top-left (or starting corner), width/height can be negative during drawing,
-      // but let's normalize them on mouseup or in renderer.
       this.render();
     }
   },
@@ -103,25 +120,36 @@ const editOverlay = {
   handleMouseUp(e) {
     if (this.isDrawingShape && this.activeShape) {
       this.isDrawingShape = false;
-      // Normalize width/height and x/y
-      let { startX, startY } = this.activeShape;
-      let { width, height } = this.activeShape.payload;
+      
+      if (this.activeShape.type === 'shape') {
+        // Normalize width/height and x/y
+        let { startX, startY } = this.activeShape;
+        let { width, height } = this.activeShape.payload;
 
-      if (width < 0) { startX += width; width = Math.abs(width); }
-      if (height < 0) { startY += height; height = Math.abs(height); }
+        if (width < 0) { startX += width; width = Math.abs(width); }
+        if (height < 0) { startY += height; height = Math.abs(height); }
 
-      if (width > 5 && height > 5) {
-        editorStore.addEdit({
-          type: 'shape',
-          page: this.activeShape.page,
-          x: startX,
-          y: startY,
-          payload: {
-            ...this.activeShape.payload,
-            width,
-            height
-          }
-        });
+        if (width > 5 && height > 5) {
+          editorStore.addEdit({
+            type: 'shape',
+            page: this.activeShape.page,
+            x: startX,
+            y: startY,
+            payload: {
+              ...this.activeShape.payload,
+              width,
+              height
+            }
+          });
+        }
+      } else if (this.activeShape.type === 'draw') {
+        if (this.activeShape.payload.points.length > 2) {
+          editorStore.addEdit({
+            type: 'draw',
+            page: this.activeShape.page,
+            payload: this.activeShape.payload
+          });
+        }
       }
       this.activeShape = null;
       this.render();

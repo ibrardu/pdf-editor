@@ -16,6 +16,8 @@ const editRenderer = {
         this.drawText(ctx, edit, viewport);
       } else if (edit.type === 'shape') {
         this.drawShape(ctx, edit, viewport);
+      } else if (edit.type === 'draw') {
+        this.drawPath(ctx, edit, viewport);
       }
       // Add more types here later
     }
@@ -90,6 +92,29 @@ const editRenderer = {
     if (color !== 'transparent') ctx.fill();
     if (borderWidth > 0) ctx.stroke();
     
+    ctx.restore();
+  },
+
+  drawPath(ctx, edit, viewport) {
+    const { points, color, borderWidth } = edit.payload;
+    if (!points || points.length < 2) return;
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = borderWidth * viewport.scale;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.beginPath();
+    const [startX, startY] = viewport.convertToViewportPoint(points[0][0], points[0][1]);
+    ctx.moveTo(startX, startY);
+
+    for (let i = 1; i < points.length; i++) {
+      const [x, y] = viewport.convertToViewportPoint(points[i][0], points[i][1]);
+      ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
     ctx.restore();
   }
 };

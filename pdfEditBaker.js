@@ -68,6 +68,35 @@ const pdfEditBaker = {
           borderColor: rgbBorder,
           borderWidth: borderWidth
         });
+      } else if (edit.type === 'draw') {
+        const { payload } = edit;
+        const { points, color, borderWidth } = payload;
+        if (!points || points.length < 2) continue;
+
+        const rgbColor = this.hexToRgb(color);
+
+        // Convert points to SVG path data
+        // For drawSvgPath, the path coords are relative to the page origin (bottom-left) OR relative to x,y provided.
+        // Actually, pdf-lib's drawSvgPath draws exactly where the coords say if we use absolute coordinates in the SVG.
+        // Wait, pdf.js returned coords where y is from top? No, pdf.js convertToPdfPoint returns y from BOTTOM.
+        // Wait! Let's double check pdf.js convertToPdfPoint. If (0,0) is bottom-left, then Y=0 is bottom.
+        // In my `text` baker, I did `y: y - fontSize`. If Y=0 is bottom, then `y - fontSize` moves it further down. This is correct if `y` was top-left of the text bounding box.
+        // Let's generate an SVG path:
+        let svgPath = `M ${points[0][0]} ${points[0][1]}`;
+        for (let i = 1; i < points.length; i++) {
+          svgPath += ` L ${points[i][0]} ${points[i][1]}`;
+        }
+
+        // Wait! In SVG, (0,0) is TOP-LEFT. But in pdf-lib `drawSvgPath` it usually parses it and draws it.
+        // But `drawSvgPath` might flip the Y axis because PDF is bottom-left, and SVG is top-left!
+        // Actually, pdf-lib's drawSvgPath assumes the path is in PDF coordinate space (where Y goes up) unless scaled.
+        // Actually, pdf-lib drawSvgPath takes the path and maps it directly.
+        pdfPage.drawSvgPath(svgPath, {
+          x: 0,
+          y: 0,
+          borderColor: rgbColor,
+          borderWidth: borderWidth
+        });
       }
     }
   },
