@@ -27,6 +27,19 @@ const pdfRenderer = {
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
+    // Sync overlay if this is the main canvas
+    if (canvas.id === 'pdf-canvas') {
+      const wrapper = document.getElementById('canvas-wrapper');
+      const overlay = document.getElementById('overlay-canvas');
+      const ui = document.getElementById('overlay-ui');
+      if (wrapper && overlay && ui) {
+        wrapper.style.width = `${viewport.width}px`;
+        wrapper.style.height = `${viewport.height}px`;
+        overlay.width = viewport.width;
+        overlay.height = viewport.height;
+      }
+    }
+
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
