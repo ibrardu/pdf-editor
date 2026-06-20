@@ -84,6 +84,47 @@ const pageOps = {
   rotateCounterClockwise(originalIndex) {
     editorStore.rotatePage(originalIndex, -90);
   },
+
+  // ---- EXTRACT (feat #7) ----
+
+  /**
+   * Extract a single page and download it as a new PDF.
+   * @param {number} originalIndex — 0-based
+   */
+  async extractPage(originalIndex) {
+    if (!editorStore.state.pdfBytes) return;
+    try {
+      const PDFDocument = window.PDFLib.PDFDocument;
+      const srcDoc = await PDFDocument.load(editorStore.state.pdfBytes);
+      const newDoc = await PDFDocument.create();
+      
+      const [copiedPage] = await newDoc.copyPages(srcDoc, [originalIndex]);
+      newDoc.addPage(copiedPage);
+      
+      // Apply rotation if needed
+      const currentRot = editorStore.state.rotations[originalIndex] || 0;
+      if (currentRot !== 0) {
+        const pages = newDoc.getPages();
+        const page = pages[0];
+        const existingRot = page.getRotation().angle;
+        page.setRotation({ type: window.PDFLib.RotationTypes.Degrees, angle: (existingRot + currentRot) % 360 });
+      }
+      
+      const pdfBytes = await newDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      const nameParts = (editorStore.state.fileName || 'extracted.pdf').split('.');
+      const ext = nameParts.length > 1 ? '.' + nameParts.pop() : '';
+      a.download = `${nameParts.join('.')}_page_${originalIndex + 1}${ext}`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Failed to extract page:', err);
+    }
+  },
 };
 
 export default pageOps;

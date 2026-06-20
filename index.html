@@ -370,6 +370,18 @@
       });
       wrap.appendChild(rotCcwBtn);
 
+      // Extract button
+      const extBtn = document.createElement('button');
+      extBtn.className = 'thumb-action-btn thumb-extract-btn';
+      extBtn.setAttribute('aria-label', `Extract page ${displayPos}`);
+      extBtn.title = 'Extract Page';
+      extBtn.innerHTML = '⇲';
+      extBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        pageOps.extractPage(originalIndex);
+      });
+      wrap.appendChild(extBtn);
+
       // Click → navigate
       wrap.addEventListener('click', () => editorStore.setPage(displayPos));
       wrap.addEventListener('keydown', (e) => {

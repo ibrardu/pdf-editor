@@ -298,6 +298,13 @@ html, body {
 }
 .thumb-rotate-ccw-btn:hover { background: var(--accent); }
 
+.thumb-extract-btn {
+  top: 4px; left: 4px;
+  background: rgba(245,158,11,0.85);
+  color: #fff;
+}
+.thumb-extract-btn:hover { background: #d97706; }
+
 /* Deleted page overlay */
 .thumb-wrap.deleted { opacity: 0.45; }
 .thumb-wrap.deleted canvas { filter: grayscale(1); }
