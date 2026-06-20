@@ -6,7 +6,7 @@ no file uploads to a server.
 
 ## Status
 
-v0.1 — Core viewer in progress.
+v0.1 — Core viewer and shell complete.
 
 ## Features
 
@@ -19,6 +19,10 @@ v0.1 — Core viewer in progress.
   Cmd/Ctrl +/−/0 for zoom). Status bar showing file info. Inter typeface,
   warm neutral palette with indigo accents. Responsive layout with mobile
   breakpoints. Dotted canvas background pattern.
+- **Editor store** — Hardened shared-state contract. Read-only proxy blocks
+  external mutation. Input validation on all setters. Zoom clamped 10%–500%.
+  Microtask-batched notifications. reset() for full state clear. 32 unit tests
+  (`node editorStore.test.js`).
 
 ## Tech stack
 
@@ -45,6 +49,7 @@ editorStore.js        - shared state contract all features build against
 pdfRenderer.js        - PDF page/thumbnail rendering via pdf.js
 uploadHandler.js      - file upload validation and processing
 toolbarController.js  - keyboard shortcuts and tool configuration
+editorStore.test.js   - unit tests for editorStore contract (node, zero deps)
 dashboard.html        - agent progress dashboard
 progress.json         - live status of every feature/branch
 AGENTS.md             - rules for AI agents working on this repo

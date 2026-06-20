@@ -29,7 +29,7 @@
         {
           "id": 3,
           "name": "editor-store",
-          "status": "todo",
+          "status": "in_progress",
           "pr": null,
           "agents": [
             "frontend",
