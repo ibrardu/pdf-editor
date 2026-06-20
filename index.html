@@ -55,6 +55,12 @@
 
     <div class="toolbar-sep" aria-hidden="true"></div>
 
+    <!-- Split file -->
+    <button class="file-btn" id="split-file-btn" title="Split PDF at current page" aria-label="Split PDF" style="display: none;">
+      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" /></svg>
+      <span>Split PDF</span>
+    </button>
+
     <!-- Merge file -->
     <button class="file-btn" id="merge-file-btn" title="Merge a PDF file" aria-label="Merge PDF file" style="display: none;">
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
@@ -146,6 +152,7 @@
   const openFileBtn   = document.getElementById('open-file-btn');
   const mergeFileBtn  = document.getElementById('merge-file-btn');
   const mergeFileInput = document.getElementById('merge-file-input');
+  const splitFileBtn  = document.getElementById('split-file-btn');
   const pdfCanvas     = document.getElementById('pdf-canvas');
   const sidebar       = document.getElementById('sidebar');
   const pageControls  = document.getElementById('page-controls');
@@ -185,6 +192,16 @@
       }
     }
     mergeFileInput.value = '';
+  });
+
+  splitFileBtn.addEventListener('click', async () => {
+    statusText.textContent = 'Splitting...';
+    try {
+      await pageOps.splitPdf(editorStore.state.currentPage);
+      statusText.textContent = 'Ready';
+    } catch (err) {
+      statusText.textContent = 'Split failed';
+    }
   });
 
   // ---- DRAG & DROP ----
@@ -262,12 +279,14 @@
       sidebar.classList.add('visible');
       pageControls.classList.add('visible');
       mergeFileBtn.style.display = 'inline-flex';
+      splitFileBtn.style.display = 'inline-flex';
     } else {
       uploadZone.classList.remove('hidden');
       pdfCanvas.classList.remove('visible');
       sidebar.classList.remove('visible');
       pageControls.classList.remove('visible');
       mergeFileBtn.style.display = 'none';
+      splitFileBtn.style.display = 'none';
     }
 
     // Active tool highlighting

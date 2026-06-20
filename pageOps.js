@@ -143,6 +143,70 @@ const pageOps = {
       alert('Failed to merge PDF: ' + err.message);
     }
   },
+
+  // ---- SPLIT (feat #9) ----
+  
+  /**
+   * Split the document at the current display page into two PDFs.
+   * Part 1: pages 1 to splitDisplayPos
+   * Part 2: pages splitDisplayPos+1 to end
+   * @param {number} splitDisplayPos — 1-based display position
+   */
+  async splitPdf(splitDisplayPos) {
+    if (!editorStore.state.originalBytes) return;
+    const order = editorStore.state.pageOrder;
+    if (splitDisplayPos < 1 || splitDisplayPos >= order.length) {
+      alert('Cannot split here. Select a page before the last page.');
+      return;
+    }
+
+    try {
+      const PDFDocument = window.PDFLib.PDFDocument;
+      const srcDoc = await PDFDocument.load(editorStore.state.originalBytes);
+      
+      const createPart = async (displayIndices, suffix) => {
+        const newDoc = await PDFDocument.create();
+        for (const displayIdx of displayIndices) {
+          const originalIndex = order[displayIdx];
+          if (this.isPageDeleted(originalIndex)) continue;
+          
+          const [copiedPage] = await newDoc.copyPages(srcDoc, [originalIndex]);
+          newDoc.addPage(copiedPage);
+          
+          const currentRot = editorStore.state.rotations[originalIndex] || 0;
+          if (currentRot !== 0) {
+            const pages = newDoc.getPages();
+            const page = pages[pages.length - 1];
+            const existingRot = page.getRotation().angle;
+            page.setRotation({ type: window.PDFLib.RotationTypes.Degrees, angle: (existingRot + currentRot) % 360 });
+          }
+        }
+        
+        if (newDoc.getPageCount() === 0) return;
+        
+        const pdfBytes = await newDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const nameParts = (editorStore.state.fileName || 'split.pdf').split('.');
+        const ext = nameParts.length > 1 ? '.' + nameParts.pop() : '';
+        a.download = `${nameParts.join('.')}_${suffix}${ext}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const part1Indices = Array.from({length: splitDisplayPos}, (_, i) => i);
+      const part2Indices = Array.from({length: order.length - splitDisplayPos}, (_, i) => splitDisplayPos + i);
+
+      await createPart(part1Indices, 'part1');
+      await createPart(part2Indices, 'part2');
+      
+    } catch (err) {
+      console.error('Failed to split PDF:', err);
+      alert('Failed to split PDF: ' + err.message);
+    }
+  },
 };
 
 export default pageOps;
