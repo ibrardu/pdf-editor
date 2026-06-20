@@ -14,6 +14,8 @@ const editRenderer = {
     for (const edit of edits) {
       if (edit.type === 'text') {
         this.drawText(ctx, edit, viewport);
+      } else if (edit.type === 'note') {
+        this.drawNote(ctx, edit, viewport);
       } else if (edit.type === 'shape' || edit.type === 'highlight' || edit.type === 'whiteout') {
         this.drawShape(ctx, edit, viewport);
       } else if (edit.type === 'draw') {
@@ -53,6 +55,35 @@ const editRenderer = {
       currentY += lineHeight;
     }
     
+    ctx.restore();
+  },
+
+  drawNote(ctx, edit, viewport) {
+    const { x, y, payload } = edit;
+    const { text, fontSize, width, height } = payload;
+
+    const [screenX, screenY] = viewport.convertToViewportPoint(x, y);
+    const scale = viewport.scale;
+
+    ctx.save();
+    // Draw yellow background box
+    ctx.fillStyle = '#fff9c4';
+    ctx.fillRect(screenX, screenY, width * scale, height * scale);
+    
+    ctx.strokeStyle = '#fbc02d';
+    ctx.lineWidth = 1 * scale;
+    ctx.strokeRect(screenX, screenY, width * scale, height * scale);
+    
+    ctx.font = `${fontSize * scale}px Helvetica, Arial, sans-serif`;
+    ctx.fillStyle = '#000000';
+    ctx.textBaseline = 'top';
+
+    const lines = text.split('\n');
+    let currentY = screenY + 4 * scale;
+    for (const line of lines) {
+      ctx.fillText(line, screenX + 4 * scale, currentY);
+      currentY += (fontSize * scale * 1.2);
+    }
     ctx.restore();
   },
 

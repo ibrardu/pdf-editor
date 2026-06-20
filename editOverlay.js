@@ -71,13 +71,15 @@ const editOverlay = {
     if (!currentViewport) return;
     const [pdfX, pdfY] = currentViewport.convertToPdfPoint(x, y);
 
-    if (activeTool === 'text') {
+    if (activeTool === 'text' || activeTool === 'note') {
       if (activeInput) {
+        // user clicked elsewhere, just commit current
         this.commitTextEntry();
+        // and optionally reset tool:
         editorStore.setActiveTool('select');
         return;
       }
-      this.startTextEntry(x, y, pdfX, pdfY, currentPage);
+      this.startTextEntry(x, y, pdfX, pdfY, currentPage, '', activeTool === 'note');
     } else if (activeTool === 'image' && pendingImageDataUrl) {
       this.placeImage(pdfX, pdfY, pendingImageDataUrl, currentPage);
     } else if (activeTool === 'shape' || activeTool === 'highlight' || activeTool === 'whiteout' || activeTool === 'edit-text') {
@@ -198,7 +200,7 @@ const editOverlay = {
     }
   },
 
-  startTextEntry(x, y, pdfX, pdfY, page, initialText = '') {
+  startTextEntry(x, y, pdfX, pdfY, page, initialText = '', isNote = false) {
     if (activeInput) {
       this.commitTextEntry();
     }
@@ -208,58 +210,63 @@ const editOverlay = {
     input.style.position = 'absolute';
     input.style.left = `${x}px`;
     input.style.top = `${y}px`;
-    input.style.minWidth = '150px';
-    input.style.minHeight = '30px';
-    input.style.fontSize = '16px';
+    input.style.border = '1px solid #4f46e5';
+    input.style.padding = '4px';
+    input.style.minWidth = '100px';
+    input.style.minHeight = '40px';
+    input.style.fontSize = '16px'; // screen size
     input.style.fontFamily = 'Helvetica, Arial, sans-serif';
-    input.style.background = 'transparent';
-    input.style.border = '1px dashed var(--accent)';
-    input.style.outline = 'none';
+    input.style.zIndex = 1000;
     input.style.resize = 'both';
-    input.style.color = '#000';
-    input.style.overflow = 'hidden';
-    input.style.lineHeight = '1.2';
     
-    uiContainer.appendChild(input);
+    if (isNote) {
+      input.dataset.isNote = 'true';
+      input.style.backgroundColor = '#fff9c4'; // Yellow note background
+      input.style.border = '1px solid #fbc02d';
+      input.style.boxShadow = '2px 2px 5px rgba(0,0,0,0.2)';
+    }
+
+    input.dataset.pdfX = pdfX;
+    input.dataset.pdfY = pdfY;
+    input.dataset.page = page;
+
+    document.getElementById('canvas-wrapper').appendChild(input);
     input.focus();
-
-    activeInput = { input, pdfX, pdfY, page };
-
-    input.addEventListener('blur', () => {
-      setTimeout(() => {
-        if (activeInput && activeInput.input === input) {
-          this.commitTextEntry();
-        }
-      }, 100);
-    });
+    activeInput = input;
   },
 
   commitTextEntry() {
     if (!activeInput) return;
-    const { input, pdfX, pdfY, page } = activeInput;
-    const text = input.value.trim();
+    const text = activeInput.value.trim();
     if (text) {
-      // Calculate font size in PDF points.
-      // 16px in screen pixels -> pdf scale. We can just store PDF points.
-      // If scale is 1, 1px = 1pt approx in pdf.js (pdf.js uses 96dpi so 1pt = 1/72in = 1.33px, wait. pdf.js default scale 1 is 72dpi. So 1 CSS px = 1 PDF pt).
-      // Let's store fontSize as 16 / currentViewport.scale to keep it consistent.
-      const scale = currentViewport.scale;
-      const fontSizePt = 16 / scale;
+      const page = parseInt(activeInput.dataset.page, 10);
+      const pdfX = parseFloat(activeInput.dataset.pdfX);
+      const pdfY = parseFloat(activeInput.dataset.pdfY);
+      const isNote = activeInput.dataset.isNote === 'true';
+      
+      const scale = currentViewport ? currentViewport.scale : 1;
+      const rect = activeInput.getBoundingClientRect();
+      const pdfWidth = rect.width / scale;
+      const pdfHeight = rect.height / scale;
 
       editorStore.addEdit({
-        type: 'text',
+        type: isNote ? 'note' : 'text',
         page,
         x: pdfX,
         y: pdfY,
         payload: {
           text,
-          fontSize: fontSizePt,
+          fontSize: 16 / scale,
           color: '#000000',
-          fontFamily: 'Helvetica'
+          width: pdfWidth,
+          height: pdfHeight
         }
       });
     }
-    input.remove();
+
+    if (activeInput.parentNode) {
+      activeInput.parentNode.removeChild(activeInput);
+    }
     activeInput = null;
   },
 
