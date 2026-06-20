@@ -6,7 +6,7 @@ no file uploads to a server.
 
 ## Status
 
-v0.1 — Core viewer and shell complete.
+v0.2 — Core viewer, shell, and page organization features (Wave 2) complete.
 
 ## Features
 
