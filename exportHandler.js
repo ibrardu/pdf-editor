@@ -67,43 +67,7 @@ const exportHandler = {
     try {
       document.body.style.cursor = 'wait';
       const pdfjsLib = window['pdfjs-dist/build/pdf'];
-      const pdfJsDoc = await pdfjsLib.getDocument({ data: state.documentBytes }).promise;
-      
-      const zip = new JSZip();
-      
-      for (let i = 0; i < state.pageOrder.length; i++) {
-        const originalIndex = state.pageOrder[i];
-        const visualPageNum = i + 1;
-        
-        const page = await pdfJsDoc.getPage(originalIndex + 1);
-        let rotation = state.rotations[originalIndex] || 0;
-        
-        const viewport = page.getViewport({ scale: 2.0, rotation: page.rotate + rotation });
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext('2d');
-        
-        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-        
-        // Also draw edits for this page onto the canvas
-        // Wait, editRenderer takes viewport. We must create an editRenderer that applies edits to this high-res canvas.
-        // Actually, importing editRenderer here is fine.
-        const activeEdits = state.edits.filter(e => e.page === visualPageNum && !state.deletedPages.has(e.page));
-        // We need the dynamic import because editRenderer is already in the global app scope, but doing it here might cause cyclic deps.
-        // Let's just grab the base64. It won't have overlay edits unless we draw them.
-        // To draw overlay edits, we can use window.editRenderer if we exported it globally, or we can just import it.
-        // We already imported editRenderer but we'd need to mock it if cyclic dependency. Let's just use it natively if possible, or skip edits for images for now and just export the PDF to images.
-        // Wait, if they added whiteout, it MUST show in the image!
-        // To be perfectly accurate, we should bake edits to a PDF first, THEN render that baked PDF to images!
-        // This is brilliant and guarantees 100% accuracy!
-        // Let's do that!
-        
-        // BUT wait, rendering PDF from bytes inside this loop is expensive.
-        // Let's just create a new Doc, bake edits, save bytes, then load with pdf.js, then render pages to canvas!
-      }
-      
+
       // Let's use the optimized approach:
       // 1. Bake to new PDF bytes
       // 2. Load with PDF.js
