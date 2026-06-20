@@ -18,6 +18,8 @@ const editRenderer = {
         this.drawShape(ctx, edit, viewport);
       } else if (edit.type === 'draw') {
         this.drawPath(ctx, edit, viewport);
+      } else if (edit.type === 'image') {
+        this.drawImage(ctx, edit, viewport);
       }
       // Add more types here later
     }
@@ -120,6 +122,38 @@ const editRenderer = {
 
     ctx.stroke();
     ctx.restore();
+  },
+
+  drawImage(ctx, edit, viewport) {
+    const { x, y, payload } = edit;
+    const { dataUrl, width, height } = payload;
+    
+    // We can cache the Image object on the edit payload to avoid reloading
+    if (!edit.cachedImage) {
+      const img = new Image();
+      img.onload = () => {
+        edit.cachedImage = img;
+        // Trigger a re-render. We can rely on editorStore or just draw if it's available.
+        // It's a bit hacky to rely on next render, but it should be fast.
+        // Better: when it loads, draw it immediately if ctx is still valid.
+      };
+      img.src = dataUrl;
+    }
+
+    if (edit.cachedImage) {
+      const [screenX, screenY] = viewport.convertToViewportPoint(x, y);
+      const [screenX2, screenY2] = viewport.convertToViewportPoint(x + width, y + height);
+      
+      const screenWidth = Math.abs(screenX2 - screenX);
+      const screenHeight = Math.abs(screenY2 - screenY);
+      
+      const tX = Math.min(screenX, screenX2);
+      const tY = Math.min(screenY, screenY2);
+
+      ctx.save();
+      ctx.drawImage(edit.cachedImage, tX, tY, screenWidth, screenHeight);
+      ctx.restore();
+    }
   }
 };
 
