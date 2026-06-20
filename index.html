@@ -20,76 +20,7 @@
       PDF Editor
     </div>
 
-    <div class="toolbar-sep" aria-hidden="true"></div>
-
-    <!-- Tool buttons with inline SVG icons -->
-    <button class="tool-btn" data-tool="select" id="tool-select" title="Select tool (V)" aria-label="Select tool">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" /></svg>
-      <span>Select</span>
-      <span class="shortcut-badge">V</span>
-    </button>
-
-    <button class="tool-btn" data-tool="text" id="tool-text" title="Add Text (T)" aria-label="Add Text">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.2 48.2 0 0 0 5.887-.51c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.4 48.4 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
-      <span>Add Text</span>
-      <span class="shortcut-badge">T</span>
-    </button>
-
-    <button class="tool-btn" data-tool="edit-text" id="tool-edit-text" title="Edit Existing Text (E)" aria-label="Edit Text">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
-      <span>Edit Text</span>
-      <span class="shortcut-badge">E</span>
-    </button>
-
-    <button class="tool-btn" data-tool="note" id="tool-note" title="Add Note (N)" aria-label="Add Note">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-      <span>Note</span>
-      <span class="shortcut-badge">N</span>
-    </button>
-
-    <button class="tool-btn" data-tool="draw" id="tool-draw" title="Draw tool (D)" aria-label="Draw tool">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
-      <span>Draw</span>
-      <span class="shortcut-badge">D</span>
-    </button>
-
-    <button class="tool-btn" data-tool="highlight" id="tool-highlight" title="Highlight tool (H)" aria-label="Highlight tool">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" /></svg>
-      <span>Highlight</span>
-      <span class="shortcut-badge">H</span>
-    </button>
-
-    <button class="tool-btn" data-tool="shape" id="tool-shape" title="Shape tool (S)" aria-label="Shape tool">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" /></svg>
-      <span>Shape</span>
-      <span class="shortcut-badge">S</span>
-    </button>
-
-    <button class="tool-btn" data-tool="image" id="tool-image" title="Add Image (I)" aria-label="Add Image">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
-      <span>Image</span>
-      <span class="shortcut-badge">I</span>
-    </button>
-
-    <button class="tool-btn" data-tool="whiteout" id="tool-whiteout" title="Whiteout tool (W)" aria-label="Whiteout tool">
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3z" fill="white" stroke="currentColor" stroke-width="1.5"/></svg>
-      <span>Whiteout</span>
-      <span class="shortcut-badge">W</span>
-    </button>
-
-    <div class="toolbar-sep" aria-hidden="true"></div>
-
-    <!-- Undo / Redo -->
-    <button class="tool-btn" id="undo-btn" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
-      <span>Undo</span>
-    </button>
-    <button class="tool-btn" id="redo-btn" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
-      <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" /></svg>
-      <span>Redo</span>
-    </button>
-
-    <div class="toolbar-sep" aria-hidden="true"></div>
+    <!-- Tool buttons moved to floating toolbar -->
 
     <!-- Split file -->
     <button class="file-btn" id="split-file-btn" title="Split PDF at current page" aria-label="Split PDF" style="display: none;">
@@ -123,7 +54,9 @@
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
       <span>Text</span>
     </button>
-  </div>
+
+    <div class="toolbar-spacer"></div>
+
     <!-- Open file -->
     <button class="file-btn" id="open-file-btn" title="Open a PDF file" aria-label="Open PDF file">
       <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776" /></svg>
@@ -134,6 +67,68 @@
 
   <!-- ====== MAIN AREA ====== -->
   <div id="main">
+    <!-- Floating Toolbar for Tools and Undo/Redo -->
+    <div id="floating-toolbar" style="display: none;">
+      <!-- Editing Tools -->
+      <button class="tool-btn" data-tool="select" id="tool-select" title="Select tool (V)" aria-label="Select tool">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" /></svg>
+        <span>Select</span>
+        <span class="shortcut-badge">V</span>
+      </button>
+      <button class="tool-btn" data-tool="text" id="tool-text" title="Add Text (T)" aria-label="Add Text">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.2 48.2 0 0 0 5.887-.51c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.4 48.4 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" /></svg>
+        <span>Text</span>
+        <span class="shortcut-badge">T</span>
+      </button>
+      <button class="tool-btn" data-tool="edit-text" id="tool-edit-text" title="Edit Existing Text (E)" aria-label="Edit Text">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+        <span>Edit</span>
+        <span class="shortcut-badge">E</span>
+      </button>
+      <button class="tool-btn" data-tool="note" id="tool-note" title="Add Note (N)" aria-label="Add Note">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+        <span>Note</span>
+        <span class="shortcut-badge">N</span>
+      </button>
+      <button class="tool-btn" data-tool="draw" id="tool-draw" title="Draw tool (D)" aria-label="Draw tool">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg>
+        <span>Draw</span>
+        <span class="shortcut-badge">D</span>
+      </button>
+      <button class="tool-btn" data-tool="highlight" id="tool-highlight" title="Highlight tool (H)" aria-label="Highlight tool">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42" /></svg>
+        <span>Highlight</span>
+        <span class="shortcut-badge">H</span>
+      </button>
+      <button class="tool-btn" data-tool="shape" id="tool-shape" title="Shape tool (S)" aria-label="Shape tool">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" /></svg>
+        <span>Shape</span>
+        <span class="shortcut-badge">S</span>
+      </button>
+      <button class="tool-btn" data-tool="image" id="tool-image" title="Add Image (I)" aria-label="Add Image">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
+        <span>Image</span>
+        <span class="shortcut-badge">I</span>
+      </button>
+      <button class="tool-btn" data-tool="whiteout" id="tool-whiteout" title="Whiteout tool (W)" aria-label="Whiteout tool">
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18v18H3z" fill="white" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>Whiteout</span>
+        <span class="shortcut-badge">W</span>
+      </button>
+      
+      <div class="toolbar-sep" aria-hidden="true" style="margin: 0 2px; height: 18px;"></div>
+
+      <!-- Undo/Redo -->
+      <button class="tool-btn" id="undo-btn" title="Undo (Ctrl+Z)" aria-label="Undo" disabled>
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" /></svg>
+        <span>Undo</span>
+      </button>
+      <button class="tool-btn" id="redo-btn" title="Redo (Ctrl+Y)" aria-label="Redo" disabled>
+        <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3" /></svg>
+        <span>Redo</span>
+      </button>
+    </div>
+
     <!-- Sidebar: page thumbnails -->
     <div id="sidebar" role="navigation" aria-label="Page thumbnails">
       <div class="sidebar-heading">Pages</div>
@@ -149,7 +144,8 @@
         <h2>Upload a PDF</h2>
         <p>Drag &amp; drop a file here, or click to browse</p>
         <div style="margin-top: 1rem;">
-          <button class="file-btn" id="create-pdf-from-images-btn" style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: white; cursor: pointer;">
+          <button class="file-btn" id="create-pdf-from-images-btn" style="padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-primary); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            <svg viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; margin-right: 6px;"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>
             Or Create PDF from Images
           </button>
           <input type="file" id="images-to-pdf-input" accept="image/*" multiple style="display:none;" />
@@ -448,6 +444,7 @@
       document.getElementById('export-pdf-btn').style.display = 'inline-flex';
       document.getElementById('export-images-btn').style.display = 'inline-flex';
       document.getElementById('export-text-btn').style.display = 'inline-flex';
+      document.getElementById('floating-toolbar').style.display = 'flex';
     } else {
       uploadZone.classList.remove('hidden');
       canvasWrapper.classList.remove('visible');
@@ -458,6 +455,7 @@
       document.getElementById('export-pdf-btn').style.display = 'none';
       document.getElementById('export-images-btn').style.display = 'none';
       document.getElementById('export-text-btn').style.display = 'none';
+      document.getElementById('floating-toolbar').style.display = 'none';
     }
 
     // Active tool highlighting
