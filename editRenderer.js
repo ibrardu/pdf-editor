@@ -14,7 +14,7 @@ const editRenderer = {
     for (const edit of edits) {
       if (edit.type === 'text') {
         this.drawText(ctx, edit, viewport);
-      } else if (edit.type === 'shape' || edit.type === 'highlight') {
+      } else if (edit.type === 'shape' || edit.type === 'highlight' || edit.type === 'whiteout') {
         this.drawShape(ctx, edit, viewport);
       } else if (edit.type === 'draw') {
         this.drawPath(ctx, edit, viewport);

@@ -45,7 +45,7 @@ const pdfEditBaker = {
           size: fontSize,
           color: rgbColor
         });
-      } else if (edit.type === 'shape' || edit.type === 'highlight') {
+      } else if (edit.type === 'shape' || edit.type === 'highlight' || edit.type === 'whiteout') {
         const { x, y, payload } = edit;
         const { width, height, color, borderColor, borderWidth, opacity, blendMode } = payload;
 
