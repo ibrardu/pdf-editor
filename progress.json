@@ -18,7 +18,7 @@
         {
           "id": 2,
           "name": "app-shell-and-toolbar",
-          "status": "todo",
+          "status": "in_progress",
           "pr": null,
           "agents": [
             "frontend",
