@@ -31,6 +31,8 @@ v0.1 — Core viewer and shell complete.
   remaining page.
 - **Page rotate** — Clockwise and counter-clockwise rotation buttons on each 
   thumbnail (↻ / ↺). Updates both thumbnail and main canvas rendering.
+- **Page extract** — Extract button on each thumbnail (⇲). Downloads a new
+  PDF containing only that specific page, with rotations applied.
 
 ## Tech stack
 
