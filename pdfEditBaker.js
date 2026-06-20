@@ -45,6 +45,37 @@ const pdfEditBaker = {
           size: fontSize,
           color: rgbColor
         });
+      } else if (edit.type === 'note') {
+        const { x, y, payload } = edit;
+        const { text, fontSize, width, height } = payload;
+        
+        // pdf-lib's drawRectangle y is bottom-left
+        pdfPage.drawRectangle({
+          x: x,
+          y: y - height,
+          width: width,
+          height: height,
+          color: this.hexToRgb('#fff9c4'),
+          borderColor: this.hexToRgb('#fbc02d'),
+          borderWidth: 1,
+        });
+
+        const rgbColor = this.hexToRgb('#000000');
+        const lines = text.split('\n');
+        // PDF point size is the exact same as what we stored.
+        // In PDF coordinate system, Y goes UP. So we start at y - height + 4, wait.
+        // If x,y is top-left, and we want to draw text inside the box from the top...
+        // y is top. First line baseline is `y - fontSize - 4`.
+        let currentY = y - fontSize - 4;
+        for (const line of lines) {
+          pdfPage.drawText(line, {
+            x: x + 4,
+            y: currentY,
+            size: fontSize,
+            color: rgbColor
+          });
+          currentY -= (fontSize * 1.2);
+        }
       } else if (edit.type === 'shape' || edit.type === 'highlight' || edit.type === 'whiteout') {
         const { x, y, payload } = edit;
         const { width, height, color, borderColor, borderWidth, opacity, blendMode } = payload;
