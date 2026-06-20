@@ -14,6 +14,8 @@ const editRenderer = {
     for (const edit of edits) {
       if (edit.type === 'text') {
         this.drawText(ctx, edit, viewport);
+      } else if (edit.type === 'shape') {
+        this.drawShape(ctx, edit, viewport);
       }
       // Add more types here later
     }
@@ -46,6 +48,47 @@ const editRenderer = {
       ctx.fillText(line, screenX, currentY);
       currentY += lineHeight;
     }
+    
+    ctx.restore();
+  },
+
+  drawShape(ctx, edit, viewport) {
+    let { x, y, startX, startY, payload } = edit;
+    let { width, height, color, borderColor, borderWidth } = payload;
+
+    // Use startX, startY if available (during drawing), otherwise x, y
+    let rectX = startX !== undefined ? startX : x;
+    let rectY = startY !== undefined ? startY : y;
+
+    // Normalize width and height if negative
+    if (width < 0) { rectX += width; width = Math.abs(width); }
+    if (height < 0) { rectY += height; height = Math.abs(height); }
+
+    // Convert PDF points to screen coordinates
+    const [screenX, screenY] = viewport.convertToViewportPoint(rectX, rectY);
+    // Convert PDF dimensions to screen dimensions
+    const [screenX2, screenY2] = viewport.convertToViewportPoint(rectX + width, rectY + height);
+    
+    const screenWidth = Math.abs(screenX2 - screenX);
+    const screenHeight = Math.abs(screenY2 - screenY);
+    
+    // ConvertToViewportPoint handles rotation. If viewport is rotated, screenX, screenY might not be top-left.
+    // For rectangles, we should just use standard fillRect for now (assuming no rotation, or handle it via rect).
+    // Actually pdf.js `convertToViewportPoint` gives exact screen point.
+    // A simple approach is min/max to get top-left.
+    const tX = Math.min(screenX, screenX2);
+    const tY = Math.min(screenY, screenY2);
+
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = borderWidth * viewport.scale;
+
+    ctx.beginPath();
+    ctx.rect(tX, tY, screenWidth, screenHeight);
+    
+    if (color !== 'transparent') ctx.fill();
+    if (borderWidth > 0) ctx.stroke();
     
     ctx.restore();
   }
